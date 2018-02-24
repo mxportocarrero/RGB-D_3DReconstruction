@@ -1,6 +1,94 @@
 #include "image.h"
 
-Image::Image()
-{
+//Aca lo unico que tenemos que hacer es leer el archivo depth.txt and rgb.txt
+//Segun el numero de frame que necesitemos
 
+//Constructor
+
+Image::Image(DataSet * _dataset, int frame_number){
+    dataset = _dataset;
+    noframe = frame_number;
+
+    //Leemos la imagen y almacenamos en un objeto cv::Mat
+    RGB_frame = cv::imread(dataset->getRGB_filename(noframe));
+    DEPTH_frame = cv::imread(dataset->getDEPTH_filename(noframe),cv::IMREAD_ANYDEPTH);
+
+    width = RGB_frame.cols;
+    height = RGB_frame.rows;
+    pixelCount = width * height;
+
+    //Creamos nuestro PointCloud
+    point_cloud = new PointCloud();
+
+    //Creamos referencias a nuestros vectores contenedores
+    std::vector<vec3> &Points = point_cloud->Points;
+    std::vector<vec3> &Normals = point_cloud->Normals;
+    std::vector<vec3> &Colors = point_cloud->Colors;
+    Points.resize(pixelCount);
+    Normals.resize(pixelCount);
+    Colors.resize(pixelCount);
+
+    FillPointCloudData();
+}
+
+cv::Mat Image::get_RGB_Mat()
+{
+    return RGB_frame;
+}
+
+cv::Mat Image::get_DEPTH_Mat()
+{
+    return DEPTH_frame;
+}
+
+
+void Image::FillPointCloudData()
+{
+    //Creamos referencias a nuestros vectores contenedores
+    std::vector<vec3> &Points = point_cloud->Points;
+    std::vector<vec3> &Normals = point_cloud->Normals;
+    std::vector<vec3> &Colors = point_cloud->Colors;
+
+    //Estimamos las Coordenadas Locales para cada pixel en el frame
+    Intrinsics = new Camera();
+    uint16_t *pSource = (uint16_t*) DEPTH_frame.data;
+
+    //Pasamos de coordenadas (u,v,s) en 2D a (x,y,z) Coordenadas Locales
+    for(int v = 0; v < height; v++)
+        for(int u = 0; u < width; u++){
+            uint16_t value = (uint16_t) (*(pSource)); // Leyendo los valores para 16 Bits
+            int i = u + v * width; //Valor para iterar sobre nuestro FlatVector
+            //int key = cv::waitKey(5000);
+            //cout << i<<": "<< value << endl;
+            if(value != 0){
+                Points[i].z = value / Intrinsics->depthFactor ; // Valor en Z
+                Points[i].x = (u - Intrinsics->cx) * Points[i].z / Intrinsics->fx; // Valor en X
+                Points[i].y = (v - Intrinsics->cy) * Points[i].z / Intrinsics->fy; // Valor en X
+            }else{
+                Points[i].x = 0;
+                Points[i].y = 0;
+                Points[i].z = 0;
+            }
+            pSource++;
+        }
+    /**
+    // Codigo para visualizar el Depth Image Correspondiente
+    double min,max;
+    cv::minMaxIdx(DEPTH_frame,&min,&max);
+    cout << "max:" << max << "min:" << min << endl;
+    cv::Mat adjMap;
+    //src.convertTo(adjMap,CV_8UC1,(double)255/(256*100),-min); // Coloramiento Uniforme
+    DEPTH_frame.convertTo(adjMap,CV_8UC1,255/(max-min),-min); // Coloramiento de acuerdo a valores maximos y minimos
+
+    cv::Mat FalseColorMap;
+    cv::applyColorMap(adjMap,FalseColorMap,cv::COLORMAP_BONE);
+    cv::cvtColor(FalseColorMap,FalseColorMap,CV_BGR2RGB);
+
+    cv::imshow("Hola",FalseColorMap);
+    int key = cv::waitKey(50000);
+    **/
+
+
+    //Estimamos el Color
+    //Estimamos las Normales
 }

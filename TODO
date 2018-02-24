@@ -1,0 +1,11 @@
+//Tareas A realizarse
+
+// Tenemos que copiar las clases que ya hemos creado
+// Adecuemos el codigo de la libreria al nuestro
+// Generar las Nubes de Puntos a partir de los Datos y Realizar el Algoritmo SLAM entre dos pares de Imagenes
+// OJO: Nos enfocamos en el mesh final. Asi que no habra mucha visualización
+
+
+//22-Feb
+Ya puedo leer los nombres de los archivos
+ahora debemos crear una imagen y leer los datos con OpenCV, Generar los PointCloud
