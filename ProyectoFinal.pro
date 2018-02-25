@@ -12,7 +12,10 @@ SOURCES += main.cpp \
     loadshader.cpp \
     image.cpp \
     camera.cpp \
-    dataset.cpp
+    dataset.cpp \
+    odometry.cpp \
+    addfunctions.cpp \
+    volumeintegrator.cpp
 
 HEADERS += \
     posegraph.h \
@@ -24,8 +27,11 @@ HEADERS += \
     loadshader.h \
     image.h \
     camera.h \
-    dataset.h
+    dataset.h \
+    odometry.h \
+    volumeintegrator.h
 
 DISTFILES += \
     TODO \
-    makefile
+    makefile \
+    README.md

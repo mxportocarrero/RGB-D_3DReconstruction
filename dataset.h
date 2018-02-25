@@ -17,6 +17,8 @@ public:
     std::string getRGB_filename(int i);
     std::string getDEPTH_filename(int i);
 
+    int NoFrames();
+
 };
 
 #endif // DATASET_H

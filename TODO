@@ -9,3 +9,11 @@
 //22-Feb
 Ya puedo leer los nombres de los archivos
 ahora debemos crear una imagen y leer los datos con OpenCV, Generar los PointCloud
+
+//24-Feb
+Generar las Nubes de Puntos con sus correspondientes Colores. Los puntos con profundidad 0(no leidos, son ignorados)
+
+//25-Feb
+Visualizacion del Point Cloud, Solo para ir revisando como va quedando
+Podriamos tambien realizar la Parte de Volume Integracion, Generacion del Mesh
+Volume Integrator(Aligned Point Cloud Collection___to___3D Mesh)

@@ -8,6 +8,7 @@
 #include <string>
 #include <fstream>
 #include <math.h>
+#include <algorithm>
 
 using std::cout;
 using std::endl;
@@ -48,10 +49,14 @@ typedef glm::vec4 vec4;
 /**EIGEN LIB**/
 
 #include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/SVD>
 
 /**MACROS**/
 
 #define ENDL std::cout << std::endl;
+
+float simpleEuclidean(cv::Point &p,cv::Point &q);
+float simpleEuclidean(cv::Point3f &p,cv::Point3f &q);
 
 
 #endif // INCLUDES_H

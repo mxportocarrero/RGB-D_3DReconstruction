@@ -34,6 +34,9 @@ public:
     Image(DataSet * _dataset, int frame_number);
     cv::Mat get_RGB_Mat();
     cv::Mat get_DEPTH_Mat();
+    cv::Point3f get_CVCoordFromPixel(int u, int v);
+    Eigen::Vector3d get_EigenCoordFromPixel(int u, int v);
+    cv::Point3i get_CVColorFromPixel(int u, int v);
 };
 
 #endif // IMAGE_H

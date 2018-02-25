@@ -41,6 +41,28 @@ cv::Mat Image::get_DEPTH_Mat()
     return DEPTH_frame;
 }
 
+Eigen::Vector3d Image::get_EigenCoordFromPixel(int u, int v)
+{
+    int i = u + v * FrameWidth;
+    vec3 c = point_cloud->Points[i];
+    return Eigen::Vector3d(c.x,c.y,c.z);
+}
+
+cv::Point3f Image::get_CVCoordFromPixel(int u, int v)
+{
+
+    int i = u + v * FrameWidth;
+    vec3 c = point_cloud->Points[i];
+    return cv::Point3f(c.x,c.y,c.z);
+}
+
+cv::Point3i Image::get_CVColorFromPixel(int u, int v)
+{
+    int i = u + v * FrameWidth;
+    vec3 c = point_cloud->Colors[i];
+    return cv::Point3i((int)c.r, (int)c.g, (int)c.b );
+}
+
 
 void Image::FillPointCloudData()
 {
@@ -50,7 +72,7 @@ void Image::FillPointCloudData()
     std::vector<vec3> &Colors = point_cloud->Colors;
 
     //Estimamos las Coordenadas Locales para cada pixel en el frame
-    Intrinsics = new Camera();
+    Intrinsics = new Camera(); // Los intrinsics son inizializados por defecto
     uint16_t *pSource = (uint16_t*) DEPTH_frame.data;
 
     //Pasamos de coordenadas (u,v,s) en 2D a (x,y,z) Coordenadas Locales
@@ -70,6 +92,24 @@ void Image::FillPointCloudData()
                 Points[i].z = 0;
             }
             pSource++;
+        }
+    // Registramos los colores
+    for(int v = 0; v < height; v++)
+        for(int u = 0; u < width; u++){
+            int i = u + v * width;
+            // Podemos realizar un cambio de colores de RGB a GrayScale
+            // Por el momento solo los guardaremos
+            // Recordemos que opencv guarda los valores en BGR
+            Colors[i].r = (RGB_frame.at<cv::Vec3f>(v,u))[2];
+            Colors[i].g = (RGB_frame.at<cv::Vec3f>(v,u))[1];
+            Colors[i].b = (RGB_frame.at<cv::Vec3f>(v,u))[0];
+        }
+
+    //Estimamos las normales(Por el momento valor por defecto)
+    for(int v = 0; v < height; v++)
+        for(int u = 0; u < width; u++){
+            int i = u + v * width;
+            Normals[i] = vec3(1.0f,1.0f,1.0f);
         }
     /**
     // Codigo para visualizar el Depth Image Correspondiente

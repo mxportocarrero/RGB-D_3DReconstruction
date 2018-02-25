@@ -61,3 +61,8 @@ std::string DataSet::getDEPTH_filename(int i)
 {
     return depth_filenames[i];
 }
+
+int DataSet::NoFrames()
+{
+    return rgb_filenames.size();
+}
