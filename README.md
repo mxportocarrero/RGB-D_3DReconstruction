@@ -1,3 +1,11 @@
+
+# RGB-D - 3D Reconstruction
+
+Proyecto Final para Computación Gráfica - Programa de Maestría en Ciencia de la Computación - UCSP
+
+
+# Instalación y Compilación
+
 Este Proyecto funciona en base a OpenCV y OpenGL
 
 Para Compilar la Libreria Eigen
