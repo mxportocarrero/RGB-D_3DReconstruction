@@ -19,6 +19,8 @@ public:
     vector<vec3> Points;
     vector<vec3> Normals;
     vector<vec3> Colors;
+
+    int NumberOfPixels();
 };
 
 

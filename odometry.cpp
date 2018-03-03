@@ -198,7 +198,6 @@ std::vector<cv::DMatch> computeFeatureMatches(const cv::Mat &source,std::vector<
     std::vector<cv::DMatch> matches;
     matcher.match(descriptor_s,descriptor_t,matches);
 
-    return matches;
 
     /**
     //Calculamos los valores maximos y minimos
@@ -224,13 +223,15 @@ std::vector<cv::DMatch> computeFeatureMatches(const cv::Mat &source,std::vector<
     }
     cout << good_matches.size() << endl;
 
+    cv::Mat img_matches;
     cv::drawMatches(source,keypoints_s,target,keypoints_t,matches,img_matches);
 
-    cv::imshow("f",img_matches);
+    cv::imshow("features Matches",img_matches);
 
-    cv::waitKey(0);
-
+    cv::waitKey(10000);
     **/
+
+    return matches;
 }
 
 // p & q must have same size

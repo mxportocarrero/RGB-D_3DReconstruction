@@ -17,10 +17,26 @@ private:
     int noFrames;
     std::vector<PointCloud> PointClouds;
     std::vector<Eigen::Matrix4d> Transformations;
+    std::vector<glm::mat4> GLTransformations;
+
+    /*buffers to be draw*/
+    int noPoints;
+    std::vector<vec3> AlignedPoints;
+    std::vector<vec3> AlignedNormals;
+    std::vector<vec3> AlignedColors;
+
 public:
     VolumeIntegrator(Odometry &source);
 
     void AlignClouds();
+
+    int TotalPoints();
+
+    vec3* point_data();
+    vec3* color_data();
+    vec3* normal_data();
+
+    void PrintInfo();
 
 };
 

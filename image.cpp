@@ -63,6 +63,22 @@ cv::Point3i Image::get_CVColorFromPixel(int u, int v)
     return cv::Point3i((int)c.r, (int)c.g, (int)c.b );
 }
 
+PointCloud Image::getGLPointCloud()
+{
+    return *point_cloud;
+}
+
+void Image::PrintInfo()
+{
+    //Verifiquemos el contenido
+    for(int i = 10000 ; i < 50000;i++){
+        auto p = point_cloud->Points[i];
+        cout << "(" << p.x << "," <<
+                p.y << "," <<
+                p.z << ")";
+    } cout << endl;
+}
+
 
 void Image::FillPointCloudData()
 {
@@ -97,12 +113,16 @@ void Image::FillPointCloudData()
     for(int v = 0; v < height; v++)
         for(int u = 0; u < width; u++){
             int i = u + v * width;
+
+            int b = RGB_frame.at<cv::Vec3b>(v,u)[0];
+            int g = RGB_frame.at<cv::Vec3b>(v,u)[1];
+            int r = RGB_frame.at<cv::Vec3b>(v,u)[2];
+            //cout << r << " " << g << " " << b << endl ;
             // Podemos realizar un cambio de colores de RGB a GrayScale
             // Por el momento solo los guardaremos
             // Recordemos que opencv guarda los valores en BGR
-            Colors[i].r = (RGB_frame.at<cv::Vec3f>(v,u))[2];
-            Colors[i].g = (RGB_frame.at<cv::Vec3f>(v,u))[1];
-            Colors[i].b = (RGB_frame.at<cv::Vec3f>(v,u))[0];
+            // Ojo debemos normalizar por q lee de 0 a 1
+            Colors[i] = vec3(r,g,b) / 255.0f;
         }
 
     //Estimamos las normales(Por el momento valor por defecto)

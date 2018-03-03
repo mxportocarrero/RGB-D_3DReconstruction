@@ -34,4 +34,6 @@ HEADERS += \
 DISTFILES += \
     TODO \
     makefile \
-    README.md
+    README.md \
+    vertex.shader \
+    fragment.shader
