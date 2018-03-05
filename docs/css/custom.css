@@ -1,12 +1,36 @@
 /*CUSTOMIZACION DEL CSS BASE*/
 
-h2,h4{
-	color: #000C5A;
+/*Color y formato para los Titulos*/
+h1,h2,h3,h4{
+	color: #ccff66;
 }
 
-h3.product{
-	color: #000C5A;	
+/*Color y formato para el párrafo*/
+p{
+	color: #ffffff;
 }
+
+/*Defaults para las secciones*/
+body{
+	background-color: #202020;
+}
+
+section{
+	background-color: #202020;
+}
+
+
+/*Formato para la linea separadora horizontal*/
+hr { 
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: dashed;
+    border-color: #ccff66;
+    border-width: 1px;
+} 
 
 .carousel-caption {
 	background-color: rgba(0,0,0,0.6);
