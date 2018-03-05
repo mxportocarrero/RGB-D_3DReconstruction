@@ -1,0 +1,59 @@
+/*CUSTOMIZACION DEL CSS BASE*/
+
+h2,h4{
+	color: #000C5A;
+}
+
+h3.product{
+	color: #000C5A;	
+}
+
+.carousel-caption {
+	background-color: rgba(0,0,0,0.6);
+	margin: 1rem 1rem;
+    top: 2rem;
+    bottom: auto;
+}
+
+.btn-primary{
+	background-color: #00afef;
+	border-color: #00afef;
+}
+
+.navbar-nav > li{
+  margin-left:15px;
+  margin-right:15px;
+}
+
+.navbar-item{
+	color: #000C5A;
+}
+.navbar-menu{
+	color: #000C5A;
+}
+
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+.card-title{
+	color: #000C5A;
+}
+
+.card-text{
+	font-size: 14px;
+}
+
+table.table-bordered{
+		    border:2px solid #111;
+		    margin-top:20px;
+		}
+table.table-bordered > thead > tr > th{
+		    border:1px solid #111;
+		}
+table.table-bordered > tbody > tr > th{
+		    border:1px solid #111;
+		}
+table.table-bordered > tbody > tr > td{
+		    border:1px solid #111;
+		}
