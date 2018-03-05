@@ -11,6 +11,7 @@ g++ main.cpp -o main && ./main
 #include "posegraph.h"
 #include "odometry.h"
 #include "volumeintegrator.h"
+#include "tsdf.h"
 
 #define DATABASE_NAME "data/burghers_sample_png"
 //#define DATABASE_NAME "data/cactusgarden_png"
@@ -240,6 +241,10 @@ int main(int argc, char** argv){
     integrator = new VolumeIntegrator(odometry);
     integrator->AlignClouds();
     //integrator->PrintInfo();
+
+    /**Probar este cdigo**/
+    TSDF tsdf(odometry,eVector3f(0,0,0),10.0f,16);
+
 
     /** OpenGL **/
 

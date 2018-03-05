@@ -28,7 +28,7 @@ private:
 public:
     VolumeIntegrator(Odometry &source);
 
-    void AlignClouds();
+    void AlignClouds(); // Funcion que calcula las matrices de transformacion y agrega los puntos a un vector global
 
     int TotalPoints();
 

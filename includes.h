@@ -56,6 +56,13 @@ typedef glm::vec4 vec4;
 
 #define ENDL std::cout << std::endl;
 
+/**Algunos Typedefs**/
+#define FOR8 for(int i = 0; i < 8;i++)
+#define for_i(n) for(int i = 0; i < n; i++)
+#define for_j(n) for(int j = 0; j < n; j++)
+
+/**Global Helper Functions**/
+
 float simpleEuclidean(cv::Point &p,cv::Point &q);
 float simpleEuclidean(cv::Point3f &p,cv::Point3f &q);
 
