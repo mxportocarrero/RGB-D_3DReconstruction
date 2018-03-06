@@ -15,7 +15,7 @@
     <!-- Estilos en CSS -->
     <link rel="stylesheet" type="text/css" href="css/custom.css">
 
-    <title>3d RGB-D Reconstruction</title>
+    <title>3D RGB-D Reconstruction</title>
   </head>
   <body>
 
@@ -26,7 +26,7 @@
 
 <!-- HEADER -->
 
-<section class="container text-left pt-4 pb-4"  style="background-color: #202020">
+<section class="container text-left pt-4 pb-4">
 
 	<div class="pl-4">
 			
@@ -42,7 +42,7 @@
 
 	    	<div class=" text-right">
 	    		<h5>
-	        		<a class="" href="#">Slides</a> &nbsp; | &nbsp; <a href="#">Github Package</a> <br>
+	        		<a class="" href="https://docs.google.com/presentation/d/1IVWONZgGIN88dzefCzF7c3MPVoQZ60zo8kFWecfZaSU/edit?usp=sharing">Slides</a> &nbsp; | &nbsp; <a href="https://github.com/mxportocarrero/RGB-D_3DReconstruction">Github Package</a> <br>
 	    		</h5>
 	        	mxportocarrero@gmail.com &nbsp; <i class="fas fa-envelope"></i>
 	    	</div>
@@ -77,7 +77,7 @@
 
 <section class="container text-center">
 	<br>
-		<iframe width="640" height="480" src="https://www.youtube.com/embed/RqixSH6N3bw"></iframe>
+		<iframe width="640" height="480" frameBorder="0" src="https://www.youtube.com/embed/RqixSH6N3bw"></iframe>
 	<br><br>
 	<hr>
 	
@@ -85,229 +85,191 @@
 
 <!--REPORT-->
 <section class="container pt-3">
-	
-	<h3>Abstract</h3><br>
+	<div class="pl-4">	
+		<h3>Abstract</h3><br>
 
-	<p class="paper-paragraph text-justify">
-		En el siguiente trabajo se presenta un método para resolver el problema "Dense 3D Reconstruction"
-		a partir de un Imágenes RGBD. Esto es, generar un mesh (o Superficie) globalmente consistente y detallado de una escena en base
-		a un stream continuo (por ejemplo, un video) provenientes de algun sensor especializado, como el Kinect. El usuario puede
-		mover el sensor libremente.
-	</p>
+		<p class="paper-paragraph text-justify">
+			En el siguiente trabajo se presenta un método para resolver el problema "Dense 3D Reconstruction"
+			a partir de un Imágenes RGBD. Esto es, generar un mesh (o Superficie) globalmente consistente y detallado de una escena en base
+			a un stream continuo (por ejemplo, un video) provenientes de algun sensor especializado, como el Kinect. El usuario puede
+			mover el sensor libremente.
+		</p>
 
-	<p class="paper-paragraph text-justify">
-		Se realizan 3 etapas de procesamiento. Frame Registration, SLAM Optimization y Volume Integration. Estas etapas además deben solucionar
-		el problema de movimiento libre del sensor (6DOF), además de reducir el ruido captado por la poca precision de estos sensores. Más aún,
-		se debe tomar en cuenta que este trabajo pretende realizar tal reconstrucción en tiempo real.
-	</p>
+		<p class="paper-paragraph text-justify">
+			Se realizan 3 etapas de procesamiento. Frame Registration, Graph-SLAM Optimization y Volume Integration. Estas etapas además deben solucionar
+			el problema de movimiento libre del sensor (6DOF), además de reducir el ruido captado por la poca precision de estos sensores. Más aún,
+			se debe tomar en cuenta que este trabajo pretende realizar tal reconstrucción en tiempo real.
+		</p>
 
-	<p class="paper-paragraph text-justify">
-		Los resultados obtenidos hasta el momento demuestran que es posible realizar una reconstrucción detallada de escenas complejas y medianas
-		(aprox. 50 m2) usando estas camáras de consumo masivo.
-	</p><br>
+		<p class="paper-paragraph text-justify">
+			Los resultados obtenidos hasta el momento demuestran que es posible realizar una reconstrucción detallada de escenas complejas y medianas
+			(aprox. 50 m2) usando estas camáras de consumo masivo.
+		</p><br>
+	</div>
+	<hr>
+	<div class="pl-4">
+		<h3 class="pt-3">Objetivos del Proyecto</h3><br>
 
-	<h3>Introducción</h3><br>
+		<p class="paper-paragraph text-justify">
+			El propósito del proyecto es estudiar la forma de generar meshes a partir de un stream RGBD provisto por un Sensor Comercial de Profundidad
+			como el Kinect. Este problema tiene muchas aplicaciones que van desde la Navegación Autónoma a Programas que usan Realidad Aumentada o Mixta.
+			Sin embargo, el impacto de este tipo de información esta limitado por el poco frecuente acceso a este tipo de sensores y al nivel de dificultad
+			que conlleva su desarollo. Así nos enfocaremos en:
+		</p>
 
+		<ul class="paper-paragraph">
+			<li>Usar la Data ó Data Stream provenientes de un sensor RBGD para reconstruir una escena compleja</li>
+			<li>Revisar los trabajos recientes y el estado del arte en el área. Aplicar algoritmos y optimizaciones que mejorenel desempeño del paper base</li>
+			<li>Desarrollar y mantener un programa que realize la reconstrucción, buscando que sea los mas sencillo y robusto</li>
+		</ul><br>
+	</div>
+	<hr>
+	<div class="pl-4">
+		<h3 class="pt-3">Trabajo Relacionado</h3><br>
 
+		<p class="paper-paragraph text-justify">
+			el trabajo de Reconstrucción es una área de investigación que en los últimos tiempos viene siendo de gran interés; pero sus inicios vienen de hace bastante tiempo.
+		</p>
+		<p class="paper-paragraph text-justify">
+			Los primeros trabajos se atribuyen a los Realizados por (1) y (2) quienes fueron los pioneros en proponer dos variantes del Iterative Closest Point.
+			A partir de ese momento el interes en generar modelos 3D fue incremenándose, pero en ese momento no se desarrolló mucho debido a la falta de hardware especializado
+			y a lo reciente del área. Es por ello, que el estudio de modelos 3D se dejo a Fotogrametría y la Estereoscopia que era posible aun con una sola cámara.
+		</p>
+		<p class="paper-paragraph text-justify">
+			A pesar de que la Reconstruction Monocular o Stereoscopica se ha desarrollado mucho, tiene limitantes en varios aspectos, como del sensor, algoritmos, calibración, que
+			no permiten que estos adquieran escenas muy detalladas o "Up-to-Scale". Lo contrario pasa si usamos además un sensor de profundidad. Los sensores han ido evolucionando,asi mismo la tecnología que los opera, lo que permite una mayor precisión y rango de uso, lo suficiente como para obtener pequeños detalles en una escena compleja.
+		</p>
+		<p class="paper-paragraph text-justify">
+			Actualmente, varios autores han desarrollado distintos enfoques con objetivos diferentes. Los enfoques pueden llegar desde lo probabilista a lo aproximado o exacto y en
+			cuanto a los objetivos normalmente se persigue obtener mayor precisión o mayor rapidez. Sin embargo, es dificil obtener ambos en estos problemas.
+		</p>
+		<p class="paper-paragraph text-justify">
+			El presente trabajo se basa en el paper de Zhou. Más, es importante anotar que se reviso el Estado del Arte del Área y se busco aquellas optimizaciones que hiceran
+			mas sencillo y eficiente al algoritmo. Esto teniendo como meta relizar un programa lo más preciso y rápido posible.
+		</p>
+		<br>
+	</div>
+	<hr>
+	<div class="pl-4">
+		<h3 class="pt-3">Overview</h3><br>
+
+		<p class="paper-paragraph text-justify">
+			El trabajo se centro en realizar tres tareas específicas:			
+		</p>
+		<ul class="paper-paragraph">
+			<li>Frame Registration</li>
+			<li>Graph-SLAM Optimization</li>
+			<li>Volume Integration</li>
+		</ul>
+		<p class="paper-paragraph text-justify">
+			Cada una de estas etapas pueden realizarse de diferentes formas y teniendo distintos enfoques, a continuación
+			damo una breve explicación de cada una de ellas:
+		</p>
+
+		<h5 class="pt-3">Frame Registration</h5>
+
+		<p class="paper-paragraph text-justify">
+			En esta etapa procesamos la Raw Data proveniente del sensor. Esta data debe pasar por un pre-procesamiento
+			de calibración y sincronización. Esto es para asegurarnos que tanto la imagen RGB y la imagen de Depth se registren
+			mutuamente. Es decir, que la correspondencia en pixeles sea 1 a 1. Observemos que la mayoría de Data de Prueba generalmente
+			cuenta con estas condiciones.
+		</p>
+		<p class="paper-paragraph text-justify">
+			El siguiente paso consiste en extraer la información geométrica de las imagenes (Nubes de Puntos, Colores, Normales). Ello generalmente, se
+			realiza con la matriz intrínseca de la cámara.
+		</p>
+
+		<p class="paper-paragraph text-justify">
+			Una vez obtenidos las nubes de Puntos es necesario Alinear estas nubes. Esto es, el proceso de Registración. Para ello, se hace uso de alguna variante de ICP.
+			El ICP tiene como objetivo calcular la matriz de transformación(6DOF) que minimize alguna metrica de error sobre ambas nubes de puntos.
+		</p>
+
+		<p class="paper-paragraph text-justify">
+			Existen varias formas de realizar el ICP, sin embargo, en el presente trabajo se aprovecharon las images RGB, de las cuales se extrajeron ORB features.
+			Estos se usaron para asegurar correspondencias entre las nubes de puntos y poder aplicar Point-to-Point ICP. Esta parte se optimizo haciendo uso del algoritmo RANSAC.
+			Este último no solo permite una convergencia mas ŕapida del ICP, sino también elimina outliers o ruido que se presente en las nubes.
+		</p>
+
+		<h5 class="pt-3">Graph-SLAM Optimization</h5>
+
+		<p class="paper-paragraph text-justify">
+			Con el conjunto de Matrices de Transformación para frames consecutivos es posible calcular o al menos dibujar un alineamiento bueno de los puntos, pero no
+			preciso. La consecución de la trayectoria en base de un frame anterior, trae como consecuencia acumulación de Drift, o error acumulado, que se incrementa mientras
+			mas larga sea la trayectoria.
+		</p>
+		<p class="paper-paragraph text-justify">
+			Para minimizar este problema y asegurarnos de que nuestra reconstrucción sea consistente, se realiza un proceso de optimización que busca repartir el error acumulado por
+			Drift entre toda o en partes de la trayectoria. Para Ello construye un grafo, conocido como Graph-SLAM, donde cada nodo es un frame y cada arista es una Matrix de Transformación. Una de las tareas mas importantes en esta etapa es el Reconocimiento de Loop Closures, que es posible tambien a través de Image Features. La minimización del error se realiza construyendo una adecuada función de error(minimizable) y que pueda ser resuelta por algún Método Numérico como el de Gaus-Newton. Es posible utilizar solvers como el g2o.
+		</p>
+
+		<h5 class="pt-3">Volume Integration</h5>
+
+		<p class="paper-paragraph text-justify">
+			Ya teniendo las transformaciones optimizadas. La siguiente etapa consiste en la integración de los datos de cada frame en una sola Escena Global. Para ello se han realizado
+			bastante cantidad de modelos. Sin embargo el más efectivo es construir una Truncated Signed Distance Function(TSDF) sobre un volume global. Esta TSDF, irá actualizando sus valores en cada frame, para al final contener en cada voxel, las medidas aproximadas a la superficie (del objeto) más cercanas. Este proceso se conoce como Integración
+		</p>
+		<p class="paper-paragraph text-justify">
+			Una vez se cuenta con una TSDF integrada por todos los frames del stream RGBD. Es necesario visualizar los resultados. Esto último se consigue haciendo uso de Ray Casting o algún método de poligonalización como el algoritmo de Marching Cubes.
+		</p>
+		<br>
+
+	</div>
+	<hr>
+	<div class="pl-4">
+		<h3 class="pt-3">Resultados y Experimentos</h3><br>
+
+		<p class="paper-paragraph text-justify">
+			Nuestros Resultados los podremos ver en el video			
+		</p>
+	</div>
+	<hr>
+	<div class="pl-4">
+		<h3>Discusión</h3><br>
+		<p class="paper-paragraph text-justify">
+			
+		</p>
+	</div>
+	<hr>
+	<div class="pl-4">
+		<h3>Referencias</h3><br>
+
+		<ol>
+			<li>Besl & McKay,1992,A Method for Registration of 3-D Shapes</li>
+			<li>Chen & Medioni, 1992, Object Modelling by Registration of Multiple Range Images</li>
+			<li>Curless & Levoy, 1996, A Volumetric Method for Building Complex from Range Images</li>
+			<li>Dai et. al., 2017, BundleFusion: Real-time Globally Consistent 3D Reconstruction using On-the-fly Surface Re-integration</li>
+			<li>Eggert,1997, Estimating 3-D rigid body Transformations: a comparison of four major algorithms</li>
+			<li>Endres et. al., 2012, An Evaluation of the RGB-D SLAM System</li>
+			<li>Endres et. al., 2014, 3-D Mapping with and RGB-D Camera</li>
+			<li>Fischler, 1981, Random Sample Concensus: A Paradigm for Model Fitting with Applications to Image Analisys and Automated Cartography</li>
+			<li>Furhmann,2011, Fusion of Depth Maps with Multiple Scales (*)</li>
+			<li>Hornung et. al., 2013, An Efficient Probabilistic 3D Mapping Framework Based on Octrees</li>
+			<li>Knapitsch,2017,Tanks and Temples: Benchmarking Large-Scale Scene Reconstruction</li>
+			<li>Lorensen & Cline,1987, Marching Cubes: A High Resolution 3D Surface construction algorithm</li>
+			<li>Maie et. al., 2017, Efficient Online Surface Correction for Real-time Large-Scale 3D Reconstruction</li>
+			<li>Newcombe et. al., 2011, Kinect-Fusion: Real-Time Dense Surface Mapping and Tracking</li>
+			<li>Park, Zhou & Koltun, 2017, Colored Point Cloud Registration</li>
+			<li>Parker et. al., 1998, Interactive Ray Tracing for Isosurface Rendering</li>
+			<li>Rublee et. al., 2011, ORB: an efficient alternative to SIFT or SURF</li>
+			<li>Rusinkiewicz, 2001, Efficient Variants of the ICP ALgorithm</li>
+			<li>Segal et. al., 2009, Generalized-ICP</li>
+			<li>SteinBrucker Sturm & Cremers, 2011, Real-time Visual Odometry from Dense RGB-D Images</li>
+			<li>Turk & Levoy,1994, Zippered Polygon Meshes from Range Images</li>
+			<li>Umeyama,1991, Least-Squares Estimation of Transformation Parameters Between Two Points Patterns</li>
+			<li>Whelan et. al., 2016, ElasticFusion: Real-Time Dense SLAM and Light Source Estimation</li>
+			<li>Zhou, 2013, Dense Scene Reconstruction from Points of Interest (**)</li>
+			<li>Zhou, 2014, Color Map Optimization for 3D Reconstruction with Consumer Depth Cameras</li>
+			<li>Zhou, 2014, Simultaneous Localization and Calibration: Self-Calibration of Consumer Depth Cameras</li>
+			<li>Zhou, 2015, Robust Reconstruction of Indoor Scenes</li>
+			<li>Zhou, 2016, Fast Global Registration</li>
+			<li>Zhou, 2018, Open3D: A Modern Library for 3D Data Processing</li>
+		</ol>
+		* Revisar estos papers<br>
+		** Paper base del Proyecto<br><br>
+	</div>
+	<hr>
 </section>
 	
-
-
-
-
-<section class="container mb-2">
-  <div class="row  align-items-end">
-    <div class="col mr-auto">
-    <img class="img-fluid" src="img/logo_new.png" width="400">
-    </div>  
-    <div class="col text-right">
-      <div style="font-size:1.5rem; color: #00AFEF">
-        <a href="#"><i class="fab fa-facebook-square"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-      </div>
-      <div style="font-size: 0.8rem;color:#000C5A;margin-bottom: 0.1rem;">
-        quiropractica.buena.salud@gmail.com  <i class="fas fa-envelope"></i><br>
-        buenasaludperu@gmail.com  <i class="fas fa-envelope"></i><br>
-        9__ ___ ___ <i class="fab fa-whatsapp"></i> &nbsp; 
-        (054) 23 - 2080 <i class="fas fa-phone"></i><br>
-
-      </div>
-      
-    </div>
-    
-  </div>
-  
-</section>
-
-
-
-<!-- navbar (el navbar sticky no puede estar en container) -->
-    <nav class="navbar navbar-expand-sm sticky-top navbar-light bg-light">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav mr-auto ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Inicio</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nosotros</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Nuestro Equipo</a>
-              <a class="dropdown-item" href="#">Nuestras Instalaciones</a>
-              <a class="dropdown-item" href="#">Testimonios</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">La Quiropractica</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Primera Visita</a>
-              <a class="dropdown-item" href="#">Segunda Visita</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Servicios</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Consultas</a>
-              <a class="dropdown-item" href="#">Talleres de Salud</a>
-              <a class="dropdown-item" href="#">Radiografías</a>
-              <a class="dropdown-item" href="#">Promociones</a>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Productos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contacto</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-<!-- Fin del Navegador -->
-
-<!--MAIN-->
-<main>
-<!-- CARRUSEL-->
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-  </ol>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img class="d-block w-100" src="img/carrusel1.jpg" alt="First slide">
-      <div class="carousel-caption d-none d-md-block py-4">
-        <h3>Salud & Bienestar</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur or. Nullam mattis sed diam eu tincidunt. Vivamus aliquam tempor elit.</p>
-        <button class="btn btn-primary">Ver Mas</button>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="img/carrusel2.jpg" alt="Second slide">
-      <div class="carousel-caption d-none d-md-block py-4">
-        <h3>Prevención</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur or. Nullam mattis sed diam eu tincidunt. Vivamus aliquam tempor elit.</p>
-        <button class="btn btn-primary">Ver Mas</button>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="img/carrusel3.jpg" alt="Third slide">
-      <div class="carousel-caption d-none d-md-block py-4">
-        <h3>Calidad de Vida</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur or. Nullam mattis sed diam eu tincidunt. Vivamus aliquam tempor elit.</p>
-        <button class="btn btn-primary">Ver Mas</button>
-      </div>
-    </div>
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Anterior</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Siguiente</span>
-  </a>
-</div>
-<!--FIN DE CARRUSEL-->
-
-<section class="container pt-5">
-        <div class="row featurette align-items-center">
-          <div class="col-md-7 pl-5">
-            <h2 class="featurette-heading" style="color: #000C5A">Bienvenido al Centro Quiropráctico Buena Salud. <span class="text-muted">Un paso hacia a la Salud Integral</span></h2>
-            <p class="lead">En nuestras instalaciones ponemos a su disposición un staff de profesionales especializados en tratamientos quiroprácticos.</p>
-            <p class="lead">Consúltenos, estaremos encantados de atenderlo.</p>
-          </div>
-          <div class="col-md-5 text-center">
-            <img class="featurette-image img-fluid mx-auto" src="img/bienvenida.jpg" alt="Generic placeholder image">
-          </div>
-        </div>
-</section>
-
-
-
-<!--MODO DE PONER LAS CARDS OJO LAS IMAGENES DEBEN TENER UN TAMAÑO ESPECIFICO-->
-<section class="container-fluid mt-5" style="padding-top:2rem;padding-bottom:2rem;background-color: #eeeeee;">
-<section class="container ">
-  <h1 class="" style="color: #00AFEF">Nuestros Servicios</h1>
-  <p>En Centro Quiropráctico Buena Salud ofrecemos una gran gama de servicios</p>
-  <div class="card-deck my-5 text-center">
-    <div class="card border" >
-      <img class="card-img-top img-fluid" src="img/carrusel1.jpg" alt="Card image cap">
-      <div class="card-body">
-        <h5 class="card-title">Primera Visita</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional</p>
-        <button class="btn btn-primary">Ver Más</button>
-      </div>
-    </div>
-    <div class="card">
-      <img class="card-img-top" src="img/carrusel1.jpg" alt="Card image cap">
-      <div class="card-body">
-        <h5 class="card-title">Consultas</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional</p>
-        <button class="btn btn-primary">Ver Más</button>
-      </div>
-    </div>
-    <div class="card">
-      <img class="card-img-top" src="img/carrusel1.jpg" alt="Card image cap">
-      <div class="card-body">
-        <h5 class="card-title">Radiografía</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional</p>
-        <button class="btn btn-primary">Ver Más</button>
-      </div>
-    </div>
-  </div>
-  <div class="card-deck my-2 text-center">
-    <div class="card border" >
-    <img class="card-img-top img-fluid" src="img/carrusel1.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Talleres de Salud</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional</p>
-      <button class="btn btn-primary">Ver Más</button>
-    </div>
-  </div>
-  <div class="card">
-    <img class="card-img-top" src="img/carrusel1.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Venta de Articulos</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional</p>
-      <button class="btn btn-primary">Ver Más</button>
-    </div>
-  </div>
-  <div class="card">
-    <img class="card-img-top" src="img/carrusel1.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Promociones</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional</p>
-      <button class="btn btn-primary">Ver Más</button>
-    </div>
-  </div>
-  </div>
-  </div>
-</section>
-</section>
 
 <!--HORARIOS DE ATENCION -->
 
@@ -350,55 +312,7 @@
 </section>
 <!-- FIN HORARIOS DE ATENCION -->
 
-<section class="container-fluid" style="background-color: #eeeeee;">
-  <div class="container">
-  <h1 class="pt-3" style="color: #00AFEF">Contáctanos</h1>
-  <p class=" mb-3 text-justify">Para cualquier Duda o Consulta, escribenos por este medio. Además si presentas el siguiente
-  formulario lleno al llegar a la clínica, podrás acceder a un descuento especial en tu primera cita.</p>
-  <button class="btn btn-primary">Formulario PDF</button>
-  <br><br>
-  <div class="row pt-3 align-items-center">
-    <div class="col-6">
-    <form action="#">
-      <div class="form-group">
-        <label for="">Nombre:</label>
-        <input type="text" placeholder="Escribe tu Nombre" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="">Email:</label>
-        <input type="email" placeholder="Escribe tu Email" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="">Asunto:</label>
-        <input type="text" placeholder="Asunto" class="form-control">
-      </div>
-      <div class="form-group">
-        <label>Comentario</label>
-        <textarea class="form-control" placeholder="Escribe tu comentario" rows="5" id="comment"></textarea>
-      </div>
-      <div class="form-group text-center">
-        <button class="btn btn-primary">Enviar</button>
-      </div>
-    </form>
-    </div>
-    <div class="col-6">
-      <div class="container ml-5">
-        <p>Ubicanos en:</p>
-        <div id="map-container" class="map-container" style="height: 300px;width: 400px;">        
-        </div>
 
-        <div class="row pl-4 pt-4">
-          <div class="col-2"><i class="fas fa-map"></i></div>
-          <div class="col-10"><p>  Urb. San Isidro, Mz. A, Lote 02 <br> Debajo del Puente de Fierro <br> Cercado, Arequipa </p></div>
-        </div>
-        <div class="row pl-4">
-          <div class="col-2"><i class="fas fa-phone"></i></div>
-          <div class="col-10"><p> (054) 23-2080</p></div>
-        </div>
-      </div>
-  </div>
-  </div>
-</section>
 </main>
 
 <!-- footer -->
@@ -421,32 +335,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
-    <!--Google Maps-->
-    <script src="https://maps.google.com/maps/api/js?libraries=places&key=AIzaSyAF5wOSvTNH8EuFwTllmVFZp51Hg9iNCAc"></script>
-    <!-- Google Maps settings -->
-    <script>
-      // Regular map
-      function regular_map() {
-          var var_location = new google.maps.LatLng(-16.410456, -71.546583);
 
-          var var_mapoptions = {
-              center: var_location,
-              zoom: 15
-          };
 
-          var var_map = new google.maps.Map(document.getElementById("map-container"),
-              var_mapoptions);
-
-          var var_marker = new google.maps.Marker({
-              position: var_location,
-              map: var_map,
-              title: "Centro Quiropractico Buena Salud"
-          });
-      }
-
-      // Initialize maps
-      google.maps.event.addDomListener(window, 'load', regular_map);
-    </script> 
   </body>
 
 

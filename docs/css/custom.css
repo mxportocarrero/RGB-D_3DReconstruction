@@ -2,8 +2,9 @@
 
 /*Color y formato para los Titulos*/
 h1,h2,h3,h4,h5,a{
-	color: #ccff66;
+	color: #ccff44;
 }
+
 
 /*Color y formato para el párrafo*/
 p,li,body{
@@ -11,16 +12,17 @@ p,li,body{
 }
 
 /*Defaults para las secciones*/
-body{
-	background-color: #202020;
+body,section{
+	background-color: #181818;
 }
 
-section{
-	background-color: #202020;
-}
 
 p.paper-paragraph{
 	text-indent:5%; 
+	font-size: 14px;
+}
+ul.paper-paragraph{
+	font-size: 14px;
 }
 
 
