@@ -36,7 +36,7 @@
 		<div class="d-flex justify-content-between">
 			<div>
 				<p class="font-weight-bold">
-					Proyecto Final - Computación Gráfica - Marzo 2018<br>Universidad Católica San Pablo
+					Proyecto Final - Computación Gráfica - Marzo 2018<br> Universidad Católica San Pablo
 				</p>     
 		    </div>
 
@@ -49,6 +49,15 @@
 
 		</div>
 	</div>
+	<hr>
+	<div class="pl-4">
+		<br>
+		<p class="font-weight-bold">Profesores:</p>
+		<ul>
+			<li>Dr. Jorge Poco (PhD. Computer Science - New York University, USA - 2016)</li>
+			<li>Dr. Erick Gómez (PhD. Computer Science - Universidae de Sao Paulo, Brasil - 2016)</li>
+		</ul>
+	</div><br>
 
 	<hr>
 </section>
@@ -60,11 +69,9 @@
 		
 		<p class="text-center">Quian-Yi Zhou &  Vladlen Koltun<br>Stanford University</p>
 
-		<p class="font-weight-bold">Profesores:</p>
-		<ul>
-			<li>Dr. Jorge Poco (PhD. Computer Science - New York University, USA - 2016)</li>
-			<li>Dr. Erick Gómez (PhD. Computer Science - Universidae de Sao Paulo, Brasil - 2016)</li>
-		</ul>
+	<div class="text-center">
+		<img src="img/statues.jpg" alt="Reconstruction" width="800"><br><br>
+	</div>
 
 	</div>
 	<br>
@@ -147,6 +154,22 @@
 			El presente trabajo se basa en el paper de Zhou. Más, es importante anotar que se reviso el Estado del Arte del Área y se busco aquellas optimizaciones que hiceran
 			mas sencillo y eficiente al algoritmo. Esto teniendo como meta relizar un programa lo más preciso y rápido posible.
 		</p>
+		<br>
+	</div>
+	<hr>
+	<div class="pl-4">
+		<h3 class="pt-3">Limitaciones</h3><br>
+
+		<ul class="paper-paragraph">
+			<li>Mantener el Voxel Grid usado para la TSDF consume demasiada memoria, lo que generalmente puede aliviarse con alguna estructura de subdivision espacial, como
+			un OcTree</li>
+			<li>Cualquier modo de integración de las imágenes, sea frame-to-frame o frame-to-model(más robusto para escenas grandes) esta limitado por la poca
+				precision que tienen inherentemente los sensores. Solo esperar el desarrollo de mejores sensores con mejor precision, mayor alcance y que puedan trabajar
+				en Outdoor Scenes.</li>
+			<li>Debido a lo anterior, se espera una acumulación de Registration Errors en toda la trayectoria de la cámara. Esto se pueden minimizar de distintas formas,
+				la más popular es resolviendo el problema de Graph-SLAM</li>
+		</ul>
+
 		<br>
 	</div>
 	<hr>
