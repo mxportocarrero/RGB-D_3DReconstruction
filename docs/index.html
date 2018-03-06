@@ -209,7 +209,7 @@
 			bastante cantidad de modelos. Sin embargo el más efectivo es construir una Truncated Signed Distance Function(TSDF) sobre un volume global. Esta TSDF, irá actualizando sus valores en cada frame, para al final contener en cada voxel, las medidas aproximadas a la superficie (del objeto) más cercanas. Este proceso se conoce como Integración
 		</p>
 		<p class="paper-paragraph text-justify">
-			Una vez se cuenta con una TSDF integrada por todos los frames del stream RGBD. Es necesario visualizar los resultados. Esto último se consigue haciendo uso de Ray Casting o algún método de poligonalización como el algoritmo de Marching Cubes.
+			Una vez se cuenta con una TSDF integrada por todos los frames del stream RGBD. Es necesario visualizar los resultados. Esto último se consigue haciendo uso de Ray Casting o algún método de poligonalización como el algoritmo de Marching Cubes. Adicionalmente, TSDF se construbyó sobre un OcTree que permite una evaluación mucho más rapida de los voxels.
 		</p>
 		<br>
 
@@ -219,15 +219,34 @@
 		<h3 class="pt-3">Resultados y Experimentos</h3><br>
 
 		<p class="paper-paragraph text-justify">
-			Nuestros Resultados los podremos ver en el video			
+			Como base para nuestros experimentos se tomo la Data propuesta por Sturm y los streams de Zhou, ambos ubicados en sus páginas personales. Refiérase a sus papers para mas detalles
 		</p>
+		<p class="paper-paragraph text-justify">
+			Debido a que aún no se llegado a completar el proyecto nuestra única métrica disponible por el momento es el tiempo de procesamiento.
+		</p>
+		<p class="paper-paragraph text-justify">
+			En el Paper Base, al ser un algoritmo offline, tiene tiempos de procesamiento muy largos, siendo el mínimo de 1h 20 min en ~15m2. En nuestro avance vemos que al emplear el ICP combinado con ORB y RANSAC el tiempo de registración es bajísimo siendo a lo más de algunos segundos.
+		</p><br>
 	</div>
+
+	<div class="text-center">
+		<img src="img/statue.jpeg" alt="Reconstruction" width="400">
+	</div>
+	<br><br>
+
 	<hr>
 	<div class="pl-4">
-		<h3>Discusión</h3><br>
+		<h3 class="pt-3">Discusión</h3><br>
 		<p class="paper-paragraph text-justify">
-			
+			Los avances hasta el momento indican una reducción considerable en el tiempo de procesamiento. Tal es asi, que es posible pensar, que el algoritmo puedo correr
+			en Tiempo Real. Sin embargo, no se puede asegurar nada, debido a que no se conoce como afectará nuevas optimizaciones(mas procesamiento) al algoritmo.
 		</p>
+
+		<p class="paper-paragraph text-justify">
+			Zhou, como se describe en el paper Base, realiza una serie de optimizaciones y calculos para asegurar la precision. Sin embargo, trabajos mas modernos. Son capaces de lograr mucha mas precision que Zhoud, aún corriendo en Tiempo-Real. Por ello, se debería cuestionar cual es el grado o número de optimizaciones necesarias que nos lleven
+			a tiempos aceptables de procesamiento que no sacrifiquen precision o consistencia.
+		</p>
+		<br>
 	</div>
 	<hr>
 	<div class="pl-4">
@@ -254,6 +273,7 @@
 			<li>Rusinkiewicz, 2001, Efficient Variants of the ICP ALgorithm</li>
 			<li>Segal et. al., 2009, Generalized-ICP</li>
 			<li>SteinBrucker Sturm & Cremers, 2011, Real-time Visual Odometry from Dense RGB-D Images</li>
+			<li>Sturm,2012, A benchmark for the evaluation of multi.view stereo reconstruction algorithms</li>
 			<li>Turk & Levoy,1994, Zippered Polygon Meshes from Range Images</li>
 			<li>Umeyama,1991, Least-Squares Estimation of Transformation Parameters Between Two Points Patterns</li>
 			<li>Whelan et. al., 2016, ElasticFusion: Real-Time Dense SLAM and Light Source Estimation</li>
@@ -271,47 +291,6 @@
 </section>
 	
 
-<!--HORARIOS DE ATENCION -->
-
-<section class="container py-5">
-  <h1 style="color: #000C5A">Horarios de Atención</h1>
-  <p>Trabajamos todas las Semanas de Martes a Sabados</p> <br>
-      <table class="table table-bordered pt-5 text-center">
-            <thead>
-              <tr>
-                <th scope="col">Hora:</th>
-                <th scope="col">Martes</th>
-                <th scope="col">Miercoles</th>
-                <th scope="col">Jueves</th>
-                <th scope="col">Viernes</th>
-                <th scope="col">Sabado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Mañana</th>
-                <td>08:30 am - 09:30 am <br>11:00 am - 11:30 am </td>
-                <td>08:30 am - 09:30 am <br>11:00 am - 11:30 am </td>
-                <td>08:30 am - 09:30 am <br>11:00 am - 11:30 am </td>
-                <td> Charla 08:30 am </td>
-                <td>08:30 am - 09:30 am <br>11:00 am - 11:30 am </td>
-              </tr>
-              <tr>
-                <th scope="row">Tarde</th>
-                <td>02:30 pm - 03:30 pm <br>05:00 pm - 05:30 pm </td>
-                <td>  </td>
-                <td>02:30 pm - 03:30 pm <br>05:00 pm - 05:30 pm </td>
-                <td>02:30 pm - 03:30 pm <br>05:00 pm - 05:30 pm </td>
-                <td>02:30 pm - 03:30 pm </td>
-              </tr>
-            </tbody>
-      </table>
-      <br>
-      <p class="text-left">Nota: Toda la Atención es Previa Cita.</p>
-
-</section>
-<!-- FIN HORARIOS DE ATENCION -->
-
 
 </main>
 
@@ -320,7 +299,7 @@
     <section class="container my-3 py-3">
       <div class="row">
       <div class="col">
-      Centro Quiropractivo Buena Salud &copy; 2018. Todos los derechos reservados.
+      Simple 3D Reconstruction (S3DR) &copy; 2018. Todos los derechos reservados.
       </div>
       <div class="col text-right" style="font-size: 12px;"> Diseño y Desarrollo por <a href="#">M. Portocarrero</a></div>
       </div>
