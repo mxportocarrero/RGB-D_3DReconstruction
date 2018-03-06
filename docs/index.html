@@ -26,24 +26,91 @@
 
 <!-- HEADER -->
 
-<section class="container-fluid text-left pt-4 pb-4"  style="background-color: #202020">
+<section class="container text-left pt-4 pb-4"  style="background-color: #202020">
 
-	<div class="class pl-4">
+	<div class="pl-4">
 			
-		<h2>Dense Scene Reconstruction from Range Images</h2>
-		<h4>Autor : Max W. Portocarrero</h4><br>
-		<p class="font-weight-bold">
-			Proyecto Final - Computación Gráfica - Marzo 2018
-		</p>
+		<h2>Dense Scene Reconstruction from RGBD Images</h2>
+		<h5>Max W. Portocarrero</h5><br>
+
+		<div class="d-flex justify-content-between">
+			<div>
+				<p class="font-weight-bold">
+					Proyecto Final - Computación Gráfica - Marzo 2018<br>Universidad Católica San Pablo
+				</p>     
+		    </div>
+
+	    	<div class=" text-right">
+	    		<h5>
+	        		<a class="" href="#">Slides</a> &nbsp; | &nbsp; <a href="#">Github Package</a> <br>
+	    		</h5>
+	        	mxportocarrero@gmail.com &nbsp; <i class="fas fa-envelope"></i>
+	    	</div>
+
+		</div>
 	</div>
 
 	<hr>
 </section>
 
 <section class="container">
-	<h3>Abstract</h3>
+	<div class="pl-4">
+		<p class="font-weight-bold">Artículo Base:</p>
+		<p class="text-center font-weight-bold" style="font-size: 28px;">Dense Scene Reconstruction with Points of Interest</p>
+		
+		<p class="text-center">Quian-Yi Zhou &  Vladlen Koltun<br>Stanford University</p>
+
+		<p class="font-weight-bold">Profesores:</p>
+		<ul>
+			<li>Dr. Jorge Poco (PhD. Computer Science - New York University, USA - 2016)</li>
+			<li>Dr. Erick Gómez (PhD. Computer Science - Universidae de Sao Paulo, Brasil - 2016)</li>
+		</ul>
+
+	</div>
+	<br>
+
+	<hr>
+
+</section>
+
+<!--VIDEO-->
+
+<section class="container text-center">
+	<br>
+		<iframe width="640" height="480" src="https://www.youtube.com/embed/RqixSH6N3bw"></iframe>
+	<br><br>
+	<hr>
 	
 </section>
+
+<!--REPORT-->
+<section class="container pt-3">
+	
+	<h3>Abstract</h3><br>
+
+	<p class="paper-paragraph text-justify">
+		En el siguiente trabajo se presenta un método para resolver el problema "Dense 3D Reconstruction"
+		a partir de un Imágenes RGBD. Esto es, generar un mesh (o Superficie) globalmente consistente y detallado de una escena en base
+		a un stream continuo (por ejemplo, un video) provenientes de algun sensor especializado, como el Kinect. El usuario puede
+		mover el sensor libremente.
+	</p>
+
+	<p class="paper-paragraph text-justify">
+		Se realizan 3 etapas de procesamiento. Frame Registration, SLAM Optimization y Volume Integration. Estas etapas además deben solucionar
+		el problema de movimiento libre del sensor (6DOF), además de reducir el ruido captado por la poca precision de estos sensores. Más aún,
+		se debe tomar en cuenta que este trabajo pretende realizar tal reconstrucción en tiempo real.
+	</p>
+
+	<p class="paper-paragraph text-justify">
+		Los resultados obtenidos hasta el momento demuestran que es posible realizar una reconstrucción detallada de escenas complejas y medianas
+		(aprox. 50 m2) usando estas camáras de consumo masivo.
+	</p><br>
+
+	<h3>Introducción</h3><br>
+
+
+</section>
+	
 
 
 

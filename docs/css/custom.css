@@ -1,12 +1,12 @@
 /*CUSTOMIZACION DEL CSS BASE*/
 
 /*Color y formato para los Titulos*/
-h1,h2,h3,h4{
+h1,h2,h3,h4,h5,a{
 	color: #ccff66;
 }
 
 /*Color y formato para el párrafo*/
-p{
+p,li,body{
 	color: #ffffff;
 }
 
@@ -17,6 +17,10 @@ body{
 
 section{
 	background-color: #202020;
+}
+
+p.paper-paragraph{
+	text-indent:5%; 
 }
 
 
