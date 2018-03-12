@@ -17,3 +17,8 @@ Generar las Nubes de Puntos con sus correspondientes Colores. Los puntos con pro
 Visualizacion del Point Cloud, Solo para ir revisando como va quedando
 Podriamos tambien realizar la Parte de Volume Integracion, Generacion del Mesh
 Volume Integrator(Aligned Point Cloud Collection___to___3D Mesh)
+
+
+NOTAAAAAAAAAAAAAAAAAAAAAAAAA
+a veces el error que tenemos cuando usamos pointers es no inicializarlos como nullptr
+es de lo mas tonto que me paso

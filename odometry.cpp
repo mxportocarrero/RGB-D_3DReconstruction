@@ -43,6 +43,7 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
     std::vector<cv::KeyPoint> keypoints_s;
     std::vector<cv::KeyPoint> keypoints_t;
     std::vector<cv::DMatch> matches = computeFeatureMatches(source_Mat,keypoints_s,target_Mat,keypoints_t);
+    cout << "Numero Total de Matches: " << matches.size() << endl;
 
     //Get pixel values from matches
     std::vector<cv::Point2i>pixelMatch_s(matches.size());
@@ -80,6 +81,7 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
         while(!test_passed){
             std::random_shuffle(matchIndices.begin(),matchIndices.end());
 
+            /** //Si comentamos la linea de abajo, aceptaremos valores de profundidad que tenga z = 0
             bool test1 = true;
             for(int i = 0; i < 3;i++){
                 coord_sample_s[i] = source.get_CVCoordFromPixel(pixelMatch_s[ matchIndices[i] ].x,pixelMatch_s[ matchIndices[i] ].y);
@@ -89,7 +91,7 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
                     test1 = false;
             }
             if(!test1) continue;// Empieza otra oteracion si no encuentra un buen sample
-
+            **/
 
             float dist1s = simpleEuclidean(coord_sample_s[0],coord_sample_s[1]);
             float dist2s = simpleEuclidean(coord_sample_s[0],coord_sample_s[2]);
@@ -115,7 +117,7 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
                 coord_t.push_back(tmp_t);
             }
         }
-        cout << "Total Number of Posible inliers" << coord_s.size()<<endl;
+        cout << "Total Number of Posible inliers(Este numero esta mal calculado) " << coord_s.size()<<endl;
 
         // Estimate Rotation-Translation Matrix en
         // base a los 3 primeros puntos (Los que revisamos y pasan el test)
@@ -142,13 +144,16 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
             Eigen::Vector4d v = (Eigen::Vector4d(p(0),p(1),p(2),1.0)  - preTransformation * Eigen::Vector4d(q(0),q(1),q(2),1.0));
             Eigen::Vector3d dist = Eigen::Vector3d(v(0),v(1),v(2));
             double distance = dist.norm();
-            if(distance < 0.03){ // deberia ser 0.03, sabiendo que trabajamos en la escala de 1m
+            if(distance < 0.003){ // deberia ser 0.03, sabiendo que trabajamos en la escala de 1m
                 num_Inliers++;
                 InlierIndex.push_back(i);
             }
         }
+
         cout << "Numero de Inliers: " << num_Inliers << endl;
         inlierCounts.push_back(num_Inliers);
+
+
 
         // Refinamos la Transformacion usando solo los inliers
         std::vector<Eigen::Vector3d> final_coord_s,final_coord_t;

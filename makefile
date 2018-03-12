@@ -5,7 +5,7 @@ geometry = pointcloud.cpp odometry.cpp addfunctions.cpp
 objects = image.cpp dataset.cpp camera.cpp loadshader.cpp main.cpp
 
 all: $(objects)
-	g++ $(objects) $(geometry) $(visualization) -o app $(FLAGS) && ./app 0 5
+	g++ $(objects) $(geometry) $(visualization) -o app $(FLAGS)
 
 
 clean:
