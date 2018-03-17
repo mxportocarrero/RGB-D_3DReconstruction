@@ -55,6 +55,7 @@ typedef glm::vec4 vec4;
 /**MACROS**/
 
 #define ENDL std::cout << std::endl;
+#define FOR(i,n) for(int i = 0; i < n; i++)
 
 /**Algunos Typedefs**/
 #define FOR8 for(int i = 0; i < 8;i++)
@@ -66,5 +67,8 @@ typedef glm::vec4 vec4;
 float simpleEuclidean(cv::Point &p,cv::Point &q);
 float simpleEuclidean(cv::Point3f &p,cv::Point3f &q);
 
+void printEigenVector(Eigen::Vector3d s);
+
+double AvgError(const std::vector<Eigen::Vector3d> &s, const std::vector<Eigen::Vector3d> &t);
 
 #endif // INCLUDES_H

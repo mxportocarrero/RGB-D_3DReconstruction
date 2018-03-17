@@ -56,7 +56,7 @@ void VolumeIntegrator::AlignClouds()
         //las transformaciones precalculadas anteriormente
         for(int k = 0; k < noPixels;k++){
             vec4 p = vec4(PointClouds[i].Points[k],1.0);
-            if(p.z != 0.0f && p.z < 3.0f){
+            if(p.z != 0.0f && p.z < 3.0f){ // Esto es lo maximo de profundidad
                 vec3 color = PointClouds[i].Colors[k];
                 //cout << color.r << " " << color.g << " " << color.b <<endl;
                 vec3 normal = PointClouds[i].Normals[k];

@@ -57,147 +57,71 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
 
         // Verificamos los matches con esta funcion
         //cout << i << ": " << pixelMatch_s[i] << "," << source.get_CVCoordFromPixel(pixelMatch_s[i].x,pixelMatch_s[i].y) <<
-        //        " <---> " << pixelMatch_t[i] << "," << source.get_CVCoordFromPixel(pixelMatch_t[i].x,pixelMatch_t[i].y) << endl;
+        //        " <---> " << pixelMatch_t[i] << "," << target.get_CVCoordFromPixel(pixelMatch_t[i].x,pixelMatch_t[i].y) << endl;
     }
 
-    // Randomly select 3 fo them, minimun for Point Adjustment SE(3)
-    // In this case we random shuffle and select first 3
-    std::vector<int> matchIndices(pixelMatch_s.size());
-    std::iota(matchIndices.begin(),matchIndices.end(),0);
+    //return Eigen::Matrix4d::Identity(); // Para hacer pruebas
 
-        /** INICIO DE RANSAC **/
-        // Verify that pairwise distances match!
-        // the 3 combinations should be similar under a certain threshold(dunno maybe <1.0)
-        // also we must verify matched pixel has depth value
+    // Filtrado de Puntos
+    // Para el ICP(Point-to-Point) debemos verificar que los matches realmente tienen buena correspondencia
+    // Aprovechamos los vectores pixelMatch
 
-        int iterations = 100; // Numero de iteraciones, propuesto por Fischler
-        //Vectores para almacenar el Inlier count y las transformaciones respectivas
-        std::vector<int> inlierCounts;
-        std::vector<Eigen::Matrix4d> refinedTransformations;
-        float threshold = 0.010f; // Este threshold puede variar pero com tenemos imagenes a 30Hz deberia ser 0
+    std::vector<Eigen::Vector3d> coord_s;
+    std::vector<Eigen::Vector3d> coord_t;
+    float threshold = 0.01f;
+    FOR(i,matches.size()){
+        Eigen::Vector3d s =  source.get_EigenCoordFromPixel(pixelMatch_s[i].x,pixelMatch_s[i].y);
+        Eigen::Vector3d t =  target.get_EigenCoordFromPixel(pixelMatch_t[i].x,pixelMatch_t[i].y);
 
-        for(int it = 0; it < iterations; it++){
-            cout <<endl<< "Ransac _ Iter " << it <<endl;
-
-            /**
-                En esta parte del codigo tenemos que escoger 3 matches de puntos que guarden cierta correspondencia
-                y que sean diferentes de cero.
-
-                //La diferencia a cero es necesaria por los pixeles no captados adecuadamente por el depth sensor
-                //Esto puede arreglarse de muchas formas... revisar mis notas en el paper
-            **/
-
-            std::vector<cv::Point3f> coord_sample_s(3),coord_sample_t(3); // Lo inicializamos aqui para no tener q estar creando este vector a cada rato
-            bool test_passed = false;
-            while(!test_passed){
-                std::random_shuffle(matchIndices.begin(),matchIndices.end());
-                // Insertamos y Aceptamos solo valores que cuenten con una profundidad adecuada
-                // Si comentamos la linea de abajo, aceptaremos valores de profundidad que tenga z = 0
-                for(int i = 0; i < 3;i++){
-                    coord_sample_s[i] = source.get_CVCoordFromPixel(pixelMatch_s[ matchIndices[i] ].x,pixelMatch_s[ matchIndices[i] ].y);
-                    coord_sample_t[i] = target.get_CVCoordFromPixel(pixelMatch_t[ matchIndices[i] ].x,pixelMatch_t[ matchIndices[i] ].y);
-
-                    if(coord_sample_s[i].z == 0 || coord_sample_t[i].z == 0 )
-                        continue; // Si
-                }
-
-                //Confirmamos que los valores tomados esten bien
-                float dist1s = simpleEuclidean(coord_sample_s[0],coord_sample_s[1]);
-                float dist2s = simpleEuclidean(coord_sample_s[0],coord_sample_s[2]);
-                float dist3s = simpleEuclidean(coord_sample_s[1],coord_sample_s[2]);
-
-                float dist1t = simpleEuclidean(coord_sample_t[0],coord_sample_t[1]);
-                float dist2t = simpleEuclidean(coord_sample_t[0],coord_sample_t[2]);
-                float dist3t = simpleEuclidean(coord_sample_t[1],coord_sample_t[2]);
-
-                if(abs(dist1s-dist1t) < threshold &&
-                        abs(dist2s-dist2t) < threshold &&
-                        abs(dist3s-dist3t) < threshold){
-                    test_passed = true;
-                }
-            }
-
-            // A partir de este punto trabajamos solo con Eigen para agilizar los calculos
-            // Una vez pasado el test Creamos un Obtenemos las muestras en Vector Eigen
-            std::vector<Eigen::Vector3d> coord_s,coord_t;
-            for(int i = 0; i < matches.size();i++){
-                Eigen::Vector3d tmp_s = source.get_EigenCoordFromPixel(pixelMatch_s[ matchIndices[i] ].x,pixelMatch_s[ matchIndices[i] ].y);
-                Eigen::Vector3d tmp_t = target.get_EigenCoordFromPixel(pixelMatch_t[ matchIndices[i] ].x,pixelMatch_t[ matchIndices[i] ].y);
-                if(tmp_s.z() != 0.0 && tmp_t.z() != 0.0){ // Lo valores de Z en ninguno de los pares debe ser cero. //Caso contrario no se toman en cuenta
-                    coord_s.push_back(tmp_s);
-                    coord_t.push_back(tmp_t);
-                }
-            }
-            cout << "Total Number of Inliers" << coord_s.size() <<endl;
-
-            // Estimate Rotation-Translation Matrix en
-            // base a los 3 primeros puntos (Los que revisamos y pasan el test)
-            std::vector<Eigen::Vector3d>v_s(coord_s.begin(),coord_s.begin()+3);
-            std::vector<Eigen::Vector3d>v_t(coord_t.begin(),coord_t.begin()+3);
-            /** // Ayudo a verificar el funcionamento de la descomposicion SVD
-            std::vector<Eigen::Vector3d>v_s;
-            v_s.push_back(Eigen::Vector3d(0,0,0));
-            v_s.push_back(Eigen::Vector3d(1,1,1));
-            v_s.push_back(Eigen::Vector3d(2,3,4));
-            std::vector<Eigen::Vector3d>v_t;
-            v_t.push_back(Eigen::Vector3d(1,1,1));
-            v_t.push_back(Eigen::Vector3d(2,2,2));
-            v_t.push_back(Eigen::Vector3d(3,4,5));
-            **/
-            Eigen::Matrix4d preTransformation = QuickTransformation(v_s,v_t);
-
-            // Count number of inliers
-            int num_Inliers = 0;
-            std::vector<int> InlierIndex;
-            for(int i = 0; i < coord_s.size(); i++){
-                Eigen::Vector3d p = coord_s[i];
-                Eigen::Vector3d q = coord_t[i];
-                Eigen::Vector4d v = (Eigen::Vector4d(p(0),p(1),p(2),1.0)  - preTransformation * Eigen::Vector4d(q(0),q(1),q(2),1.0));
-                Eigen::Vector3d dist = Eigen::Vector3d(v(0),v(1),v(2));
-                double distance = dist.norm();
-                if(distance < 0.003){ // deberia ser 0.003, sabiendo que trabajamos en la escala de 1m
-                    num_Inliers++;
-                    InlierIndex.push_back(i);
-                }
-            }
-
-            cout << "Numero de Inliers: " << num_Inliers << endl;
-            inlierCounts.push_back(num_Inliers);
-
-
-
-            // Refinamos la Transformacion usando solo los inliers
-            std::vector<Eigen::Vector3d> final_coord_s,final_coord_t;
-            for(int i = 0; i < num_Inliers; i++){
-                final_coord_s.push_back(coord_s[ InlierIndex[i] ]);
-                final_coord_t.push_back(coord_t[ InlierIndex[i] ]);
-            }
-            Eigen::Matrix4d transformation = QuickTransformation(final_coord_s,final_coord_t);
-            cout << "Transformacion Refinada:" << endl << transformation << endl;
-            refinedTransformations.push_back(transformation);
-        } // Fin de las iteraciones RANSAC
-
-        //Seleccionamos la mejor transformacion(aquella con mas inliers)
-        int max = 0;
-        int bestIteration = 0;
-        for(int i = 0; i < iterations;i++){
-            if(max < inlierCounts[i]){
-                max = inlierCounts[i];
-                bestIteration = i;
-            }
+        //These vectors will be the total number of inliers!! not much to check only 500 each iteration(ORB Config)
+        //Podemos ajustar el ultimo numero como parametro de tolerancia
+        if(s.z() != 0.0f && t.z() != 0.0f && std::abs(s.norm() - t.norm())< threshold){
+            coord_s.push_back(s);
+            coord_t.push_back(t);
+            //printEigenVector(s);printEigenVector(t);cout << "======================\n";
         }
-        cout << "==========================\n";
-        cout << "La mejor Iteracion fue "<< bestIteration << endl << refinedTransformations[bestIteration]<< endl;
-        cout << "==========================\n";
+    }
 
-    return refinedTransformations[bestIteration];
+    cout << "Total number of Inliers: "  << coord_s.size() << endl;
+
+    // ALGORITMO ICP
+
+    Eigen::Matrix4d T,Tacc = Eigen::Matrix4d::Identity();
+    FOR(it,10){
+        T = QuickTransformation(coord_s,coord_t);
+        Tacc = T * Tacc;
+        cout << "Transformacion:" << endl << T << endl;
+        cout << "Transformacion Acc:" << endl << Tacc << endl;
+        FOR(i,5){
+            printEigenVector(coord_s[i]);printEigenVector(coord_t[i]);cout << "======================\n";
+        }
+        double error = AvgError(coord_s,coord_t);
+        cout << "Error Promedio: " << error << endl;
+
+        // Actualizamos los valores para la siguiente iteracion
+        FOR(i,coord_t.size()){
+            Eigen::Vector4d tmp1 = T * Eigen::Vector4d(coord_t[i](0),coord_t[i](1),coord_t[i](2),1.0);
+            Eigen::Vector3d tmp2 = Eigen::Vector3d(tmp1(0),tmp1(1),tmp1(2));
+            coord_t[i] = tmp2;
+        }
+    }
+
+    return Tacc; // Para hacer pruebas
+
+
+
+
+
+
+
+
 
 }
 
 std::vector<cv::DMatch> computeFeatureMatches(const cv::Mat &source,std::vector<cv::KeyPoint>& keypoints_s, const cv::Mat &target,std::vector<cv::KeyPoint>& keypoints_t)
 {
-    //cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(1000);
-    cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(); // Saca por defecto 500 Features de los que despues debemos filtrar
+    cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(1000);
+    //cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(); // Saca por defecto 500 Features de los que despues debemos filtrar
 
     orb->detect(source,keypoints_s);
     orb->detect(target,keypoints_t);
