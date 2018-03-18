@@ -13,8 +13,11 @@ g++ main.cpp -o main && ./main
 #include "volumeintegrator.h"
 #include "tsdf.h"
 
-#define DATABASE_NAME "data/burghers_sample_png"
+//#define DATABASE_NAME "data/burghers_sample_png"
 //#define DATABASE_NAME "data/cactusgarden_png"
+#define DATABASE_NAME "data/rgbd_dataset_freiburg1_room"
+
+#define intrinsics Cam_Sturm2012_fr1
 
 // Seleccionamos los frames que vamos a procesar
 float speed = 0.01f;
@@ -232,7 +235,7 @@ int main(int argc, char** argv){
 
     std::vector<Image> voImages;
     for(int i = from; i  <= to ;i++){
-        voImages.push_back(Image(&myDataSet,i));
+        voImages.push_back(Image(&myDataSet,i,intrinsics));
     }
 
     Odometry odometry(&voImages);

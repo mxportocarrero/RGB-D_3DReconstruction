@@ -31,7 +31,7 @@ private:
     void FillPointCloudData();
 
 public:
-    Image(DataSet * _dataset, int frame_number);
+    Image(DataSet * _dataset, int frame_number, int intrinsics);
     cv::Mat get_RGB_Mat();
     cv::Mat get_DEPTH_Mat();
     cv::Point3f get_CVCoordFromPixel(int u, int v);

@@ -5,9 +5,11 @@
 
 //Constructor
 
-Image::Image(DataSet * _dataset, int frame_number){
+Image::Image(DataSet * _dataset, int frame_number, int cameraIntrinsics){
     dataset = _dataset;
     noframe = frame_number;
+
+    Intrinsics = new Camera(cameraIntrinsics); // Los intrinsics son inizializados por defecto
 
     //Leemos la imagen y almacenamos en un objeto cv::Mat
     RGB_frame = cv::imread(dataset->getRGB_filename(noframe));
@@ -88,7 +90,6 @@ void Image::FillPointCloudData()
     std::vector<vec3> &Colors = point_cloud->Colors;
 
     //Estimamos las Coordenadas Locales para cada pixel en el frame
-    Intrinsics = new Camera(); // Los intrinsics son inizializados por defecto
     uint16_t *pSource = (uint16_t*) DEPTH_frame.data;
 
     //Pasamos de coordenadas (u,v,s) en 2D a (x,y,z) Coordenadas Locales

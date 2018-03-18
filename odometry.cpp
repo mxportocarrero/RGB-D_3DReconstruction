@@ -68,7 +68,7 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
 
     std::vector<Eigen::Vector3d> coord_s;
     std::vector<Eigen::Vector3d> coord_t;
-    float threshold = 0.01f;
+    float threshold = 0.05f;
     FOR(i,matches.size()){
         Eigen::Vector3d s =  source.get_EigenCoordFromPixel(pixelMatch_s[i].x,pixelMatch_s[i].y);
         Eigen::Vector3d t =  target.get_EigenCoordFromPixel(pixelMatch_t[i].x,pixelMatch_t[i].y);
@@ -85,9 +85,9 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
     cout << "Total number of Inliers: "  << coord_s.size() << endl;
 
     // ALGORITMO ICP
-
+    // 1era Etapa
     Eigen::Matrix4d T,Tacc = Eigen::Matrix4d::Identity();
-    FOR(it,10){
+    FOR(it,5){
         T = QuickTransformation(coord_s,coord_t);
         Tacc = T * Tacc;
         cout << "Transformacion:" << endl << T << endl;
@@ -105,6 +105,17 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
             coord_t[i] = tmp2;
         }
     }
+
+    /**
+
+    // Alineando de 3 en 3 puntos aleatoriamente
+    std::vector<int> indices(coord_s.size());
+    std::iota(indices.begin(),indices.end(),0); // Fill until coord_s.size()
+
+    std::random_shuffle(indices.begin(),indices.end());
+    **/
+
+
 
     return Tacc; // Para hacer pruebas
 
