@@ -85,9 +85,12 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
     cout << "Total number of Inliers: "  << coord_s.size() << endl;
 
     // ALGORITMO ICP
-    // 1era Etapa
-    Eigen::Matrix4d T,Tacc = Eigen::Matrix4d::Identity();
-    FOR(it,5){
+    // 1era Version
+
+    Eigen::Matrix4d Tacc = Eigen::Matrix4d::Identity(); // Aqui almacenaremos los resultados
+    /**
+    Eigen::Matrix4d T;
+    FOR(it,3){
         T = QuickTransformation(coord_s,coord_t);
         Tacc = T * Tacc;
         cout << "Transformacion:" << endl << T << endl;
@@ -105,19 +108,72 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
             coord_t[i] = tmp2;
         }
     }
+    **/
 
-    /**
 
     // Alineando de 3 en 3 puntos aleatoriamente
     std::vector<int> indices(coord_s.size());
     std::iota(indices.begin(),indices.end(),0); // Fill until coord_s.size()
+    int iterations=0; double minError = 1.0;
+    Eigen::Matrix4d best_T;
+    while(iterations < 5000){
+        //cout << "======================\n" << iterations << "\n======================\n";
+        std::random_shuffle(indices.begin(),indices.end());
 
-    std::random_shuffle(indices.begin(),indices.end());
-    **/
+        //Solo usaremos 3 puntos para calcular la matriz de transformacion
+        std::vector<Eigen::Vector3d> tmp_coord_s;
+        std::vector<Eigen::Vector3d> tmp_coord_t;
+        FOR(i,3){
+            tmp_coord_s.push_back(coord_s[ indices[i] ]);
+            tmp_coord_t.push_back(coord_t[ indices[i] ]);
+        }
+
+        Eigen::Matrix4d T = QuickTransformation(tmp_coord_s, tmp_coord_t); // Guardamos las matrices en caso no encontremos una optima
+
+        //cout << "Transformacion:" << endl << T << endl;
+        //cout << "Transformacion Acc:" << endl << Tacc << endl;
+        //FOR(i,3){
+        //    printEigenVector(coord_s[ indices[i] ]);printEigenVector(coord_t[ indices[i] ]);cout << "======================\n";
+        //}
+        //double error = AvgError(coord_s,coord_t);
+        //cout << "\nError Promedio: " << error << endl << endl;
+
+        // Actualizamos los valores para la siguiente iteracion
+        std::vector<Eigen::Vector3d> v(coord_t.size()); //Copia temporal solo para evaluar
+        FOR(i,coord_t.size()){
+            Eigen::Vector4d tmp1 = T * Eigen::Vector4d(coord_t[i](0),coord_t[i](1),coord_t[i](2),1.0);
+            Eigen::Vector3d tmp2 = Eigen::Vector3d(tmp1(0),tmp1(1),tmp1(2));
+            v[i] = tmp2;
+        }
+
+        //FOR(i,3){
+        //    printEigenVector(coord_s[ indices[i] ]);printEigenVector(v[ indices[i] ]);cout << "======================\n";
+        //}
+        double error = AvgError(coord_s,v);
+        //cout << "\nError Promedio: " << error << endl << endl;
+
+        if(error < minError){
+            minError = error;
+            best_T = T;
+        }
+
+        //Si encontramos una muy buena transformacion
+        if(error < 0.012){
+            minError = error;
+            best_T = T;
+            break;
+        }
+        iterations++;
+    }
+
+    cout << "=============================\nResultados finales de las iteraciones\n=============================\n";
+    cout << "Transformacion:" << endl << best_T << endl;
+    cout << "Error Minimo: " << minError << endl;
 
 
 
-    return Tacc; // Para hacer pruebas
+
+    return best_T; // Para hacer pruebas
 
 
 
