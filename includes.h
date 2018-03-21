@@ -40,8 +40,10 @@ typedef glm::vec4 vec4;
 /**OPENCV LIB**/
 
 //Librerias opencv2
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/features2d.hpp>
 
 //Los parametros predefinidos para los datos
 #define FrameWidth 640

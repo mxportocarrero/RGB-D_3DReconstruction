@@ -53,8 +53,8 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
         int source_idx = matches[i].queryIdx;
         int target_idx = matches[i].trainIdx;
 
-        pixelMatch_s[i] = (cv::Point2i)(keypoints_s[source_idx].pt);
-        pixelMatch_t[i] = (cv::Point2i)(keypoints_t[target_idx].pt);
+        pixelMatch_s[i] = cv::Point2i(keypoints_s[source_idx].pt.x,keypoints_s[source_idx].pt.y);
+        pixelMatch_t[i] = cv::Point2i(keypoints_t[target_idx].pt.x,keypoints_t[target_idx].pt.y);
 
         // Verificamos los matches con esta funcion
         //cout << i << ": " << pixelMatch_s[i] << "," << source.get_CVCoordFromPixel(pixelMatch_s[i].x,pixelMatch_s[i].y) <<
@@ -183,16 +183,19 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
 std::vector<cv::DMatch> computeFeatureMatches(const cv::Mat &source,std::vector<cv::KeyPoint>& keypoints_s, const cv::Mat &target,std::vector<cv::KeyPoint>& keypoints_t)
 {
     //cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(1000);
-    cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(); // Saca por defecto 500 Features de los que despues debemos filtrar
+    //cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(); // Saca por defecto 500 Features de los que despues debemos filtrar
 
-    orb->detect(source,keypoints_s);
-    orb->detect(target,keypoints_t);
+    //cv::ORB orb(1000);
+    cv::ORB orb; //Toma por defecto 500 features
+
+    orb.detect(source,keypoints_s);
+    orb.detect(target,keypoints_t);
 
     cv::Mat descriptor_s;
     cv::Mat descriptor_t;
 
-    orb->compute(source,keypoints_s,descriptor_s);
-    orb->compute(target,keypoints_t,descriptor_t);
+    orb.compute(source,keypoints_s,descriptor_s);
+    orb.compute(target,keypoints_t,descriptor_t);
 
     // Feature Matching using FLANN (Kd-Trees)
     // Referirse a la documentacion de OpenCV
