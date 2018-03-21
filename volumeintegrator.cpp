@@ -2,6 +2,13 @@
 
 VolumeIntegrator::VolumeIntegrator(Odometry &source)
 {
+    Eigen::Vector3f center(0,0,0);
+    //float dist = 65.536f;
+    float dist = 32.768f;
+    //float dist = 8.0f;
+    int max_depth = 16;
+    tsdf = new VisualOcTree<float>(center,dist,max_depth);
+
     int n = source.numberOfFrames();
     noFrames = n;
     //Extraemos los PointClouds para cada frame
@@ -46,24 +53,84 @@ VolumeIntegrator::VolumeIntegrator(Odometry &source)
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
                 GLTransformations[i][x][y] = Transformations[i](y,x);
-                //OJO: la matriz4 de GLM se llena al revez!!!!!
+    //OJO: la matriz4 de GLM se llena al revez!!!!!
+}
 
-    FOR(i,2){
-        cout << "Eigen transfor: " << endl << Transformations[i] << endl;
-        printGLMatrix(GLTransformations[i]);
+VolumeIntegrator::VolumeIntegrator(DataSet *_dataset, int from, int to, int intrinsics){
+    Eigen::Vector3f center(0,0,0);
+    //float dist = 65.536f;
+    float dist = 32.768f;
+    //float dist = 8.0f;
+    int max_depth = 16;
+    tsdf = new VisualOcTree<float>(center,dist,max_depth);
+
+
+
+    int noPixels = 640*480;
+    for(int i = from; i < to; i++){
+        if(i == from){//Solo para la primera iteracion
+            Transformations.push_back(Eigen::Matrix4d::Identity());
+            Image s(_dataset,i,intrinsics);
+            PointCloud pc = s.getGLPointCloud();
+
+            for(int k = 0; k < noPixels;k++){
+                vec4 p = vec4(pc.Points[k],1.0f);
+                if(p.z != 0.0f && p.z < 3.0f){ // Esto es lo maximo de profundidad
+                    vec3 color = pc.Colors[k];
+                    vec3 normal = pc.Normals[k];
+
+                    Eigen::Vector3f loc = Eigen::Vector3f(p.x,p.y,p.z);
+                    Eigen::Vector3f c = Eigen::Vector3f(color.x,color.y,color.z);
+
+                    tsdf->insert(loc,c,1.0f);
+                }
+            }
+            GLTransformations.push_back(mat4(1.0f));
+
+            tsdf->simplify();
+            continue;
+        }
+
+        Image source(_dataset,i-1,intrinsics);
+        Image target(_dataset,i,intrinsics);
+
+        Eigen::Matrix4d T = ComputeOdometry(source,target);
+
+        T = Transformations.back() * T;
+        Transformations.push_back(T);
+        mat4 GLtransform;
+        for(int x = 0; x < 4; x++)
+            for(int y = 0; y < 4; y++)
+                GLtransform[x][y] = Transformations[i](y,x);
+        GLTransformations.push_back(GLtransform);
+
+        PointCloud pc = target.getGLPointCloud();
+        for(int k = 0; k < noPixels;k++){
+            vec4 p = vec4(pc.Points[k],1.0);
+            if(p.z != 0.0f && p.z < 3.0f){ // Esto es lo maximo de profundidad
+                vec3 color = pc.Colors[k];
+
+                vec3 normal = pc.Normals[k];
+
+                p = GLTransformations[i] * p;
+                Eigen::Vector3f loc = Eigen::Vector3f(p.x,p.y,p.z);
+                Eigen::Vector3f c = Eigen::Vector3f(color.x,color.y,color.z);
+                tsdf->insert(loc,c,1.0f);
+            }
+        }
+        tsdf->simplify();
     }
 }
 
 void VolumeIntegrator::AlignClouds()
 {
-    noPoints = 0;
     int noPixels = 640*480;
 
     for(int i = 0; i < noFrames; i++){
         //Alineamos y transformamos todos los puntos,diferentes de cero, usando
         //las transformaciones precalculadas anteriormente
         //cout << "Frame: " << i << endl;
-        int count = 0;
+        //int count = 0;
         for(int k = 0; k < noPixels;k++){
             vec4 p = vec4(PointClouds[i].Points[k],1.0);
             if(p.z != 0.0f && p.z < 3.0f){ // Esto es lo maximo de profundidad
@@ -74,48 +141,54 @@ void VolumeIntegrator::AlignClouds()
                 //if(count < 5)
                 //    printGLVector(vec3(p));
                 p = GLTransformations[i] * p;
+                Eigen::Vector3f loc = Eigen::Vector3f(p.x,p.y,p.z);
+                Eigen::Vector3f c = Eigen::Vector3f(color.x,color.y,color.z);
+                tsdf->insert(loc,c,1.0f);
+
                 //if(count < 5)
                 //    printGLVector(vec3(p));
-                AlignedPoints.push_back(vec3(p));
-                AlignedColors.push_back(color);
-                AlignedNormals.push_back(normal);
+                //AlignedPoints.push_back(vec3(p));
+                //AlignedColors.push_back(color);
+                //AlignedNormals.push_back(normal);
 
-                noPoints++;
-                count++;
+                //noPoints++;
+                //count++;
             }
         }
     }
 }
 
+void VolumeIntegrator::GenerateGLGeometry(int vm, int l = 0)
+{
+    tsdf->generatePoints(vm,l);
+}
+
+int VolumeIntegrator::VisualMode()
+{
+    return tsdf->VisualMode();
+}
+
 int VolumeIntegrator::TotalPoints()
 {
-    return noPoints;
+    return tsdf->TotalNoPoints();
 }
 
 vec3* VolumeIntegrator::point_data()
 {
-    return AlignedPoints.data();
+    return tsdf->PointData();
 }
 
 vec3* VolumeIntegrator::color_data()
 {
-    return AlignedColors.data();
+    return tsdf->ColorData();
 }
 
 vec3* VolumeIntegrator::normal_data()
 {
-    return AlignedNormals.data();
+    return tsdf->NormalData();
 }
 
 void VolumeIntegrator::PrintInfo()
 {
-    cout << "Numero de Puntos Totales: " << AlignedPoints.size() << endl;
-
-    for(int i = 0 ; i < 1000;i++){
-        cout << "(" << AlignedPoints[i].x << "," <<
-                AlignedPoints[i].y << "," <<
-                AlignedPoints[i].z << ")";
-    } cout << endl;
-
 
 }

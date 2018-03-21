@@ -57,6 +57,8 @@ struct OcTreeNode{
     BoundingBox* bBox; // Bounding Box
     //Cada nodo del arbol tendra un atributo color
 
+    int TotalPoints;
+
     Eigen::Vector3f center;
     float halfDistance;
 
@@ -66,6 +68,7 @@ struct OcTreeNode{
         center = c;
         halfDistance = dist;
         depth = _d;
+        TotalPoints = 0;
 
         bBox = new BoundingBox(c - Eigen::Vector3f(dist,dist,dist),c + Eigen::Vector3f(dist,dist,dist));
         //color = eVector3f(0,0,0);
@@ -129,6 +132,51 @@ struct OcTreeNode{
     BoundingBox getBoundingBox(){
         return *bBox;
     }
+
+    void simplifyData(){
+        eVector3f loc(0,0,0);
+        eVector3f c(0,0,0);
+
+        if( TotalPoints == 0){
+            for_i(points.size()){
+                loc += points[i];
+                c += colors[i];
+            }
+
+            TotalPoints += points.size();
+
+            loc = loc / (float) TotalPoints;
+            c = c / (float) TotalPoints;
+
+            points.clear();
+            colors.clear();
+
+            points.push_back(loc);
+            colors.push_back(c);
+
+            return;
+        }
+
+        loc = points[0] * TotalPoints; c = colors[0] * TotalPoints;
+
+        for(int i = 1; i < points.size();i++){
+            loc += points[i];
+            c += colors[i];
+        }
+
+        TotalPoints += points.size() - 1;
+
+        loc = loc / (float) TotalPoints;
+        c = c / (float) TotalPoints;
+
+        points.clear();
+        colors.clear();
+
+        points.push_back(loc);
+        colors.push_back(c);
+    }
+
+
 
     eVector3f getColor(){
 
@@ -343,6 +391,24 @@ public:
             c += v[i];
 
         return c / (float) v.size();
+    }
+
+    void simplify(){
+        //Puntero inicial al primer nodo
+        std::queue<OcTreeNode<T>*> cola;
+        cola.push(root);
+
+        while(!cola.empty()){
+            for_i(8)
+                if(cola.front()->childs[i])
+                    cola.push(cola.front()->childs[i]);
+
+            // Solo agregamos los colores presentes en el vector de colores de las hojas(depth = max_depth)
+            if(cola.front()->depth == max_depth)
+                cola.front()->simplifyData();
+
+            cola.pop();
+        }
     }
 
 

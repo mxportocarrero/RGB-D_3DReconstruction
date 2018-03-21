@@ -37,7 +37,7 @@ public:
     cv::Point3f get_CVCoordFromPixel(int u, int v);
     Eigen::Vector3d get_EigenCoordFromPixel(int u, int v);
     cv::Point3i get_CVColorFromPixel(int u, int v);
-    PointCloud getGLPointCloud();
+    const PointCloud &getGLPointCloud() const;
 
     void PrintInfo();
 };

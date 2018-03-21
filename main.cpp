@@ -11,7 +11,6 @@ g++ main.cpp -o main && ./main
 #include "posegraph.h"
 #include "odometry.h"
 #include "volumeintegrator.h"
-#include "tsdf.h"
 
 //#define DATABASE_NAME "data/burghers_sample_png"
 //#define DATABASE_NAME "data/cactusgarden_png"
@@ -117,7 +116,14 @@ void display(){
     glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(vec3),BUFFER_OFFSET(0));
 
     // Drawing Function
-    glDrawArrays(GL_POINTS,0,integrator->TotalPoints());
+    switch(integrator->VisualMode()){
+        case lines:
+            glDrawArrays(GL_LINES,0,integrator->TotalPoints());
+            break;
+        case cubes:
+            glDrawArrays(GL_TRIANGLES,0,integrator->TotalPoints());
+            break;
+    }
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
@@ -235,6 +241,7 @@ int main(int argc, char** argv){
     //Image img(&myDataSet,0);
     //img.PrintInfo();
 
+    /** //Forma 1 (funciona)
     std::vector<Image> voImages;
     for(int i = from; i  <= to ;i++){
         voImages.push_back(Image(&myDataSet,i,intrinsics));
@@ -247,8 +254,15 @@ int main(int argc, char** argv){
     integrator->AlignClouds();
     //integrator->PrintInfo();
 
-    //Probar este cdigo
-    //TSDF tsdf(odometry,eVector3f(0,0,0),10.0f,16);
+    integrator->GenerateGLGeometry(cubes,16);
+
+    **/
+
+
+    integrator = new VolumeIntegrator(&myDataSet,from,to,intrinsics);
+
+    integrator->GenerateGLGeometry(cubes,16);
+
 
 
     // OpenGL

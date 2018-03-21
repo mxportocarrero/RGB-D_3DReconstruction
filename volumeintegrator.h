@@ -3,6 +3,7 @@
 
 #include "odometry.h"
 #include "image.h"
+#include "visualoctree.h"
 
 /**
 Esta Clase recibe una colecion de Point Clouds  asociadas a un
@@ -19,16 +20,22 @@ private:
     std::vector<Eigen::Matrix4d> Transformations;
     std::vector<glm::mat4> GLTransformations;
 
-    /*buffers to be draw*/
-    int noPoints;
-    std::vector<vec3> AlignedPoints;
-    std::vector<vec3> AlignedNormals;
-    std::vector<vec3> AlignedColors;
+    // buffers to be draw
+    //int noPoints;
+    //std::vector<vec3> AlignedPoints;
+    //std::vector<vec3> AlignedNormals;
+    //std::vector<vec3> AlignedColors;
+
+    VisualOcTree<float> *tsdf;
 
 public:
     VolumeIntegrator(Odometry &source);
+    VolumeIntegrator(DataSet * _dataset, int from, int to, int intrinsics);
 
     void AlignClouds(); // Funcion que calcula las matrices de transformacion y agrega los puntos a un vector global
+
+    void GenerateGLGeometry(int,int);
+    int VisualMode();
 
     int TotalPoints();
 

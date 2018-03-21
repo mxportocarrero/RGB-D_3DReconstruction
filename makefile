@@ -1,6 +1,6 @@
 FLAGS = -lGL -lglut -lGLEW -lGLU -std=c++11 -w `pkg-config opencv --cflags --libs`
 
-visualization = volumeintegrator.o tsdf.o
+visualization = volumeintegrator.o
 geometry = pointcloud.o odometry.o addfunctions.o
 objects = image.o dataset.o camera.o loadshader.o main.o
 

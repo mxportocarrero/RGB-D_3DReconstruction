@@ -85,7 +85,7 @@ cv::Point3i Image::get_CVColorFromPixel(int u, int v)
     return cv::Point3i((int)c.r, (int)c.g, (int)c.b );
 }
 
-PointCloud Image::getGLPointCloud()
+const PointCloud &Image::getGLPointCloud() const
 {
     return *point_cloud;
 }

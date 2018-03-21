@@ -15,8 +15,7 @@ SOURCES += main.cpp \
     dataset.cpp \
     odometry.cpp \
     addfunctions.cpp \
-    volumeintegrator.cpp \
-    tsdf.cpp
+    volumeintegrator.cpp
 
 HEADERS += \
     posegraph.h \
@@ -31,8 +30,8 @@ HEADERS += \
     dataset.h \
     odometry.h \
     volumeintegrator.h \
-    tsdf.h \
-    octree.h
+    octree.h \
+    visualoctree.h
 
 DISTFILES += \
     TODO \
