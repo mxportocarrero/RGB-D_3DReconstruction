@@ -241,7 +241,8 @@ int main(int argc, char** argv){
     //Image img(&myDataSet,0);
     //img.PrintInfo();
 
-    /** //Forma 1 (funciona)
+    /**
+    //Forma 1 (funciona)
     std::vector<Image> voImages;
     for(int i = from; i  <= to ;i++){
         voImages.push_back(Image(&myDataSet,i,intrinsics));
@@ -255,13 +256,13 @@ int main(int argc, char** argv){
     //integrator->PrintInfo();
 
     integrator->GenerateGLGeometry(cubes,16);
-
     **/
+
 
 
     integrator = new VolumeIntegrator(&myDataSet,from,to,intrinsics);
 
-    integrator->GenerateGLGeometry(cubes,16);
+    integrator->GenerateGLGeometry(cubes,14);
 
 
 

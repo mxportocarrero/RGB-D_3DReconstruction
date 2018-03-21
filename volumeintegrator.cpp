@@ -59,35 +59,44 @@ VolumeIntegrator::VolumeIntegrator(Odometry &source)
 VolumeIntegrator::VolumeIntegrator(DataSet *_dataset, int from, int to, int intrinsics){
     Eigen::Vector3f center(0,0,0);
     //float dist = 65.536f;
-    float dist = 32.768f;
+    //float dist = 32.768f;
+    float dist = 16.384f;
     //float dist = 8.0f;
-    int max_depth = 16;
+    int max_depth = 14;
     tsdf = new VisualOcTree<float>(center,dist,max_depth);
 
-
-
     int noPixels = 640*480;
+    // El valor sin subsampling es 1 .. pero son demasiados puntos :(
+    int SubSampling = 5; // Esto nos servira para hacer un sub muestreo para ingresar data
     for(int i = from; i < to; i++){
+        cout << "==============================\n";
+        cout << "==============================\n";
+        cout << "Imagen: " << i << " No Nodes: " << tsdf->NumberOfNodes() << endl;
+        cout << "==============================\n";
+        cout << "==============================\n";
         if(i == from){//Solo para la primera iteracion
             Transformations.push_back(Eigen::Matrix4d::Identity());
             Image s(_dataset,i,intrinsics);
-            PointCloud pc = s.getGLPointCloud();
+            //PointCloud pc = s.getGLPointCloud();
 
-            for(int k = 0; k < noPixels;k++){
-                vec4 p = vec4(pc.Points[k],1.0f);
+            for(int k = 0; k < noPixels;k += SubSampling){
+                //cout << k << " ";
+                vec4 p = vec4(s.getPointFromPointCloud(k),1.0f);
                 if(p.z != 0.0f && p.z < 3.0f){ // Esto es lo maximo de profundidad
-                    vec3 color = pc.Colors[k];
-                    vec3 normal = pc.Normals[k];
+                    vec3 color = s.getColorFromPointCloud(k);
+                    vec3 normal = s.getNormalFromPointCloud(k);
 
                     Eigen::Vector3f loc = Eigen::Vector3f(p.x,p.y,p.z);
                     Eigen::Vector3f c = Eigen::Vector3f(color.x,color.y,color.z);
 
                     tsdf->insert(loc,c,1.0f);
                 }
+                if(k % 640 == 0)
+                    k += 640 * (SubSampling-1);
             }
             GLTransformations.push_back(mat4(1.0f));
 
-            tsdf->simplify();
+            //tsdf->simplify();
             continue;
         }
 
@@ -95,30 +104,40 @@ VolumeIntegrator::VolumeIntegrator(DataSet *_dataset, int from, int to, int intr
         Image target(_dataset,i,intrinsics);
 
         Eigen::Matrix4d T = ComputeOdometry(source,target);
+        //cout << "T1: " << endl << T << endl;
 
         T = Transformations.back() * T;
+        //cout << "T2: " << endl << T << endl;
         Transformations.push_back(T);
         mat4 GLtransform;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
-                GLtransform[x][y] = Transformations[i](y,x);
+                GLtransform[x][y] =  Transformations[i-from](y,x);
         GLTransformations.push_back(GLtransform);
 
-        PointCloud pc = target.getGLPointCloud();
-        for(int k = 0; k < noPixels;k++){
-            vec4 p = vec4(pc.Points[k],1.0);
+        //PointCloud pc = target.getGLPointCloud();
+        for(int k = 0; k < noPixels;k += SubSampling){
+            //cout << k << " ";
+            vec4 p = vec4(target.getPointFromPointCloud(k),1.0);
             if(p.z != 0.0f && p.z < 3.0f){ // Esto es lo maximo de profundidad
-                vec3 color = pc.Colors[k];
+                vec3 color = target.getColorFromPointCloud(k);
 
-                vec3 normal = pc.Normals[k];
+                vec3 normal = target.getNormalFromPointCloud(k);
 
-                p = GLTransformations[i] * p;
+                p = GLTransformations[i-from] * p;
                 Eigen::Vector3f loc = Eigen::Vector3f(p.x,p.y,p.z);
                 Eigen::Vector3f c = Eigen::Vector3f(color.x,color.y,color.z);
-                tsdf->insert(loc,c,1.0f);
+                if(!(tsdf->insert(loc,c,1.0f))){
+                    printGLMatrix(GLTransformations[i-from]);
+                    cout << "crush!\n";exit(0);
+                }
+
             }
+            if(k % 640 == 0)
+                k += 640 * (SubSampling-1);
         }
-        tsdf->simplify();
+        if(i % 15 == 0)
+            tsdf->simplify();
     }
 }
 

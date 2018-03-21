@@ -90,6 +90,21 @@ const PointCloud &Image::getGLPointCloud() const
     return *point_cloud;
 }
 
+vec3 Image::getPointFromPointCloud(int k)
+{
+    return point_cloud->Points[k];
+}
+
+vec3 Image::getColorFromPointCloud(int k)
+{
+    return point_cloud->Colors[k];
+}
+
+vec3 Image::getNormalFromPointCloud(int k)
+{
+    return point_cloud->Normals[k];
+}
+
 void Image::PrintInfo()
 {
     //Verifiquemos el contenido

@@ -39,6 +39,11 @@ public:
     cv::Point3i get_CVColorFromPixel(int u, int v);
     const PointCloud &getGLPointCloud() const;
 
+    vec3 getPointFromPointCloud(int k);
+    vec3 getColorFromPointCloud(int k);
+    vec3 getNormalFromPointCloud(int k);
+
+
     void PrintInfo();
 };
 

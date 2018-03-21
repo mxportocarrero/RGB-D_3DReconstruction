@@ -264,7 +264,10 @@ public:
             if(oct[0] && oct[1] && oct[2]) octant = iii;
 
             // Inicializar el Child Correcto
-            if(!(p->hasChild(octant))) p-> initializeChild(octant);
+            if(!(p->hasChild(octant))) {
+                p-> initializeChild(octant);
+                noNodes++;
+            }
 
             //Movemos el puntero hacia adelante
             p = p->childs[octant];
@@ -280,8 +283,9 @@ public:
         OcTreeNode<T> * p = root;
         // Assert points should be inside of octree node
         if(!isInsideNode(p,loc)){
-            cout << "No se puede agregar " << _data << " la posicion " <<
-             "(" <<  loc(0) << "," << loc(1) << "," << loc(2) << ") esta fuera de rango\n";
+            //cout << "error";
+            //cout << "No se puede agregar " << _data << " la posicion " <<
+            // "(" <<  loc(0) << "," << loc(1) << "," << loc(2) << ") esta fuera de rango\n";
             return false;
         }
 
@@ -306,7 +310,10 @@ public:
             if(oct[0] && oct[1] && oct[2]) octant = iii;
 
             // Inicializar el Child Correcto
-            if(!(p->hasChild(octant))) p-> initializeChild(octant);
+            if(!(p->hasChild(octant))) {
+                p-> initializeChild(octant);
+                noNodes++;
+            }
 
             //Movemos el puntero hacia adelante
             p = p->childs[octant];
@@ -417,6 +424,8 @@ public:
     OcTreeNode<T> * getRoot(){
         return root;
     }
+
+    int NumberOfNodes() {return noNodes;}
 
     void PrintNodeInfo(OcTreeNode<T> * node){
         node->printData();
