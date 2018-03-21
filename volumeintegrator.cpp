@@ -28,8 +28,11 @@ VolumeIntegrator::VolumeIntegrator(Odometry &source)
     // T_k = T_k-1 * T'_k
     Transformations.resize(n-1);
     Transformations[0] = source.getTransformation(0); //Matriz base
+    //cout << "Eigen transfor: " << endl << Transformations[0] << endl;
+
     for(int i = 1; i < n-1  ; i++)
         Transformations[i] = Transformations[i-1] * source.getTransformation(i);
+        //Transformations[i] = source.getTransformation(i);
 
     //Insertamos una matrix identidad al principio de nuestras transformaciones
     //para emparejar nuestros vectores y hacer bucles mas facil
@@ -42,18 +45,25 @@ VolumeIntegrator::VolumeIntegrator(Odometry &source)
     for(int i = 0; i < n;i++)
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
-                GLTransformations[i][x][y] = Transformations[i](x,y);
-    //cout << "Eigen transfor: " << endl << Transformations[0] << endl << "GL Transfor: " << GLTransformations[0][0][0] << endl << GLTransformations[0][1][0];
+                GLTransformations[i][x][y] = Transformations[i](y,x);
+                //OJO: la matriz4 de GLM se llena al revez!!!!!
+
+    FOR(i,2){
+        cout << "Eigen transfor: " << endl << Transformations[i] << endl;
+        printGLMatrix(GLTransformations[i]);
+    }
 }
 
 void VolumeIntegrator::AlignClouds()
 {
     noPoints = 0;
-    int noPixels = PointClouds[0].NumberOfPixels();
+    int noPixels = 640*480;
 
-    for(int i = 0; i < noFrames; i++)
+    for(int i = 0; i < noFrames; i++){
         //Alineamos y transformamos todos los puntos,diferentes de cero, usando
         //las transformaciones precalculadas anteriormente
+        //cout << "Frame: " << i << endl;
+        int count = 0;
         for(int k = 0; k < noPixels;k++){
             vec4 p = vec4(PointClouds[i].Points[k],1.0);
             if(p.z != 0.0f && p.z < 3.0f){ // Esto es lo maximo de profundidad
@@ -61,14 +71,20 @@ void VolumeIntegrator::AlignClouds()
                 //cout << color.r << " " << color.g << " " << color.b <<endl;
                 vec3 normal = PointClouds[i].Normals[k];
 
+                //if(count < 5)
+                //    printGLVector(vec3(p));
                 p = GLTransformations[i] * p;
+                //if(count < 5)
+                //    printGLVector(vec3(p));
                 AlignedPoints.push_back(vec3(p));
                 AlignedColors.push_back(color);
                 AlignedNormals.push_back(normal);
 
                 noPoints++;
+                count++;
             }
         }
+    }
 }
 
 int VolumeIntegrator::TotalPoints()

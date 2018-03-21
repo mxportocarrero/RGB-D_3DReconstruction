@@ -51,6 +51,7 @@ typedef glm::vec4 vec4;
 
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/SVD>
+#include <eigen3/Eigen/LU>
 
 /**MACROS**/
 
@@ -68,6 +69,8 @@ float simpleEuclidean(cv::Point &p,cv::Point &q);
 float simpleEuclidean(cv::Point3f &p,cv::Point3f &q);
 
 void printEigenVector(Eigen::Vector3d s);
+void printGLVector(vec3 s);
+void printGLMatrix(mat4 m);
 
 double AvgError(const std::vector<Eigen::Vector3d> &s, const std::vector<Eigen::Vector3d> &t);
 

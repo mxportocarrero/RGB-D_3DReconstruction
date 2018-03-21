@@ -13,7 +13,8 @@ void Odometry::CalcTransformations()
         cout << "***********************************\n";
         cout << "***********************************\n";
         cout << "Frame Pair: " << i <<endl;
-        voTransformations.push_back( ComputeOdometry(voImages->at(i),voImages->at(i-1)) );
+        voTransformations.push_back( ComputeOdometry(voImages->at(i-1),voImages->at(i)) );
+        //voTransformations.push_back( ComputeOdometry(voImages->at(i),voImages->at(i-1)) );
         cout << "***********************************\n";
         cout << "***********************************\n";
     }
@@ -87,19 +88,20 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
     // ALGORITMO ICP
     // 1era Version
 
-    Eigen::Matrix4d Tacc = Eigen::Matrix4d::Identity(); // Aqui almacenaremos los resultados
     /**
-    Eigen::Matrix4d T;
-    FOR(it,3){
-        T = QuickTransformation(coord_s,coord_t);
-        Tacc = T * Tacc;
-        cout << "Transformacion:" << endl << T << endl;
-        cout << "Transformacion Acc:" << endl << Tacc << endl;
-        FOR(i,5){
-            printEigenVector(coord_s[i]);printEigenVector(coord_t[i]);cout << "======================\n";
-        }
-        double error = AvgError(coord_s,coord_t);
-        cout << "Error Promedio: " << error << endl;
+    Eigen::Matrix4d Tacc = Eigen::Matrix4d::Identity(); // Aqui almacenaremos los resultados
+
+    //Eigen::Matrix4d T;
+    FOR(it,1){
+        Eigen::Matrix4d T = QuickTransformation(coord_s,coord_t);
+        //Tacc = T * Tacc;
+        //cout << "Transformacion:" << endl << T << endl;
+        //cout << "Transformacion Acc:" << endl << Tacc << endl;
+        //FOR(i,5){
+        //    printEigenVector(coord_s[i]);printEigenVector(coord_t[i]);cout << "======================\n";
+        //}
+        //double error = AvgError(coord_s,coord_t);
+        //cout << "Error Promedio: " << error << endl;
 
         // Actualizamos los valores para la siguiente iteracion
         FOR(i,coord_t.size()){
@@ -114,16 +116,20 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
     // Alineando de 3 en 3 puntos aleatoriamente
     std::vector<int> indices(coord_s.size());
     std::iota(indices.begin(),indices.end(),0); // Fill until coord_s.size()
-    int iterations=0; double minError = 1.0;
+    int iterations=0; double minError = 1.0, error;
+    int noInliers = coord_s.size(), required_inliers;
     Eigen::Matrix4d best_T;
-    while(iterations < 5000){
+    while(iterations < 500){
         //cout << "======================\n" << iterations << "\n======================\n";
         std::random_shuffle(indices.begin(),indices.end());
+
+        //El algoritmo usa la tercera parte de los inliers
+        required_inliers = noInliers / 3;
 
         //Solo usaremos 3 puntos para calcular la matriz de transformacion
         std::vector<Eigen::Vector3d> tmp_coord_s;
         std::vector<Eigen::Vector3d> tmp_coord_t;
-        FOR(i,3){
+        FOR(i,required_inliers){
             tmp_coord_s.push_back(coord_s[ indices[i] ]);
             tmp_coord_t.push_back(coord_t[ indices[i] ]);
         }
@@ -135,7 +141,7 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
         //FOR(i,3){
         //    printEigenVector(coord_s[ indices[i] ]);printEigenVector(coord_t[ indices[i] ]);cout << "======================\n";
         //}
-        //double error = AvgError(coord_s,coord_t);
+        error = AvgError(coord_s,coord_t);
         //cout << "\nError Promedio: " << error << endl << endl;
 
         // Actualizamos los valores para la siguiente iteracion
@@ -145,11 +151,11 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
             Eigen::Vector3d tmp2 = Eigen::Vector3d(tmp1(0),tmp1(1),tmp1(2));
             v[i] = tmp2;
         }
-
+        //cout << "ajustados\n";
         //FOR(i,3){
         //    printEigenVector(coord_s[ indices[i] ]);printEigenVector(v[ indices[i] ]);cout << "======================\n";
         //}
-        double error = AvgError(coord_s,v);
+        error = AvgError(coord_s,v);
         //cout << "\nError Promedio: " << error << endl << endl;
 
         if(error < minError){
@@ -170,25 +176,14 @@ Eigen::Matrix4d ComputeOdometry(Image &source, Image &target)
     cout << "Transformacion:" << endl << best_T << endl;
     cout << "Error Minimo: " << minError << endl;
 
-
-
-
     return best_T; // Para hacer pruebas
-
-
-
-
-
-
-
-
 
 }
 
 std::vector<cv::DMatch> computeFeatureMatches(const cv::Mat &source,std::vector<cv::KeyPoint>& keypoints_s, const cv::Mat &target,std::vector<cv::KeyPoint>& keypoints_t)
 {
-    cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(1000);
-    //cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(); // Saca por defecto 500 Features de los que despues debemos filtrar
+    //cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(1000);
+    cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(); // Saca por defecto 500 Features de los que despues debemos filtrar
 
     orb->detect(source,keypoints_s);
     orb->detect(target,keypoints_t);
@@ -235,8 +230,7 @@ std::vector<cv::DMatch> computeFeatureMatches(const cv::Mat &source,std::vector<
 
     cv::imshow("features Matches",img_matches);
 
-    cv::waitKey(10000);
-
+    cv::waitKey(500);
 
     return matches;
 }

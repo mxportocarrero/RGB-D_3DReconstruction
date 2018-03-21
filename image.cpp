@@ -5,15 +5,35 @@
 
 //Constructor
 
-Image::Image(DataSet * _dataset, int frame_number, int cameraIntrinsics){
+Image::Image(DataSet * _dataset, int frame_number, int intrinsics){
     dataset = _dataset;
     noframe = frame_number;
 
-    Intrinsics = new Camera(cameraIntrinsics); // Los intrinsics son inizializados por defecto
+    Intrinsics = new Camera(intrinsics); // Los intrinsics son inizializados por defecto
 
     //Leemos la imagen y almacenamos en un objeto cv::Mat
     RGB_frame = cv::imread(dataset->getRGB_filename(noframe));
+/**
+    // Probando con undistorsion
+    cv::Mat cameraMatrix = cv::Mat::eye(3,3,CV_64F); // Matriz para guardar la camera Intrinsics
+    cv::Mat distCoeffs = cv::Mat::zeros(8, 1,CV_64F); // Aqui guardamos los coeficientes de Distorsion
+    cameraMatrix.at<double>(0,2) = Intrinsics->cx;
+    cameraMatrix.at<double>(1,2) = Intrinsics->cy;
+    cameraMatrix.at<double>(0,0) = Intrinsics->fx;
+    cameraMatrix.at<double>(1,1) = Intrinsics->fy;
+
+    distCoeffs.at<double>(0,0) = 0.2624;
+    distCoeffs.at<double>(1,0) = -0.9531;
+    distCoeffs.at<double>(2,0) = -0.0054;
+    distCoeffs.at<double>(3,0) = 0.0026;
+    distCoeffs.at<double>(4,0) = 1.1633;
+
+    cv::Mat temp = RGB_frame.clone();
+    cv::undistort(temp,RGB_frame,cameraMatrix,distCoeffs);
+    **/
+
     DEPTH_frame = cv::imread(dataset->getDEPTH_filename(noframe),cv::IMREAD_ANYDEPTH);
+
 
     width = RGB_frame.cols;
     height = RGB_frame.rows;

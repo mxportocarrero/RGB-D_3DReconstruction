@@ -17,7 +17,9 @@ g++ main.cpp -o main && ./main
 //#define DATABASE_NAME "data/cactusgarden_png"
 #define DATABASE_NAME "data/rgbd_dataset_freiburg1_room"
 
+//#define intrinsics Cam_Defaults
 #define intrinsics Cam_Sturm2012_fr1
+
 
 // Seleccionamos los frames que vamos a procesar
 float speed = 0.01f;
@@ -225,9 +227,9 @@ int main(int argc, char** argv){
     int to = std::atoi(argv[2]);
     cout << from << to <<endl;
 
-    /** Lectura y Procesamiento de Datos con OpenCV **/
+    // Lectura y Procesamiento de Datos con OpenCV
     std::srand( unsigned( std::time(0) ));
-    /** Parte del calculo de OpenCV */
+    //Parte del calculo de OpenCV
     DataSet myDataSet(DATABASE_NAME);
 
     //Image img(&myDataSet,0);
@@ -245,11 +247,11 @@ int main(int argc, char** argv){
     integrator->AlignClouds();
     //integrator->PrintInfo();
 
-    /**Probar este cdigo**/
-    TSDF tsdf(odometry,eVector3f(0,0,0),10.0f,16);
+    //Probar este cdigo
+    //TSDF tsdf(odometry,eVector3f(0,0,0),10.0f,16);
 
 
-    /** OpenGL **/
+    // OpenGL
 
     glutInit(&argc,argv);
 
@@ -273,4 +275,5 @@ int main(int argc, char** argv){
     glutPassiveMotionFunc(mouseMotion);
 
     glutMainLoop();
+
 }
