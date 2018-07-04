@@ -2,6 +2,12 @@
 Archivo Main!! ---> la carpeta tiene Git
 La forma en como compilar deberia ser la q sigue
 g++ main.cpp -o main && ./main
+
+export LD_LIBRARY_PATH=/home/maxito911/Qt/5.9.1/gcc_64/lib:$LD_LIBRARY_PATH
+
+make && ./app FrameInicial FrameFinal
+
+usar temporalmente sudo ./app
 **/
 
 #include "includes.h"
@@ -48,7 +54,7 @@ void setMVP(){
     // Model
     //Model = glm::translate(mat4(),vec3(0.0f,0.0f,0.0f));
     float scale = 1.0f;
-    Model = glm::rotate(mat4(),180.0f,vec3(1,0,0)); //* glm::scale(mat4(),vec3(scale,scale,scale));
+    Model = glm::rotate(mat4(1.0f),180.0f,vec3(1,0,0)); //* glm::scale(mat4(),vec3(scale,scale,scale));
 
     // View
     View = glm::lookAt(ViewPos,RefPoint,Up);
@@ -116,6 +122,7 @@ void display(){
     glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(vec3),BUFFER_OFFSET(0));
 
     // Drawing Function
+    //cout << "****************Number Points: " << integrator->TotalPoints()<<endl;
     switch(integrator->VisualMode()){
         case lines:
             glDrawArrays(GL_LINES,0,integrator->TotalPoints());

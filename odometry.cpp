@@ -186,16 +186,19 @@ std::vector<cv::DMatch> computeFeatureMatches(const cv::Mat &source,std::vector<
     //cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(); // Saca por defecto 500 Features de los que despues debemos filtrar
 
     //cv::ORB orb(1000);
-    cv::ORB orb; //Toma por defecto 500 features
+    //cv::ORB orb; //Toma por defecto 500 features // declaracion con opencv2
 
-    orb.detect(source,keypoints_s);
-    orb.detect(target,keypoints_t);
+    /**OPENCV 3 ORB FEATURE DECLARATION**/
+    cv::Ptr<cv::FeatureDetector> orb = cv::ORB::create(); // al crearlo con opencv3 orb es un puntero cambiar sus llamadas para  usar -> en ves de puntos
+
+    orb->detect(source,keypoints_s);
+    orb->detect(target,keypoints_t);
 
     cv::Mat descriptor_s;
     cv::Mat descriptor_t;
 
-    orb.compute(source,keypoints_s,descriptor_s);
-    orb.compute(target,keypoints_t,descriptor_t);
+    orb->compute(source,keypoints_s,descriptor_s);
+    orb->compute(target,keypoints_t,descriptor_t);
 
     // Feature Matching using FLANN (Kd-Trees)
     // Referirse a la documentacion de OpenCV

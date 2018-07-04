@@ -4,6 +4,7 @@
 /**Core LIB**/
 
 #include <iostream>
+#include <numeric> // std::iota needs this lib
 #include <vector>
 #include <string>
 #include <cstdlib>
@@ -24,6 +25,11 @@ using std::cerr;
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+// Los dos defines de abajo me permiten imprimir directamente las matrices de glm
+#define GLM_ENABLE_EXPERIMENTAL
+
+#include <glm/gtx/string_cast.hpp>
 #include <glm/ext.hpp>
 
 typedef glm::vec2 vec2;
